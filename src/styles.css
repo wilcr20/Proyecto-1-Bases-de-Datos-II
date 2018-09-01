@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+body{
+  background: url("https://image.freepik.com/foto-gratis/textura-de-fondo_1404-93.jpg") no-repeat center center fixed;
+        background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        -o-background-size: cover;
+}
+
