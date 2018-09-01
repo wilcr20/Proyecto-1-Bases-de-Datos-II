@@ -12,4 +12,16 @@ export class IngresoComponent implements OnInit {
   ngOnInit() {
   }
 
+   ipServer:string;
+   user:string =":v";
+   pasw:string;
+
+
+   conect(){
+     console.log("");
+     console.log("IP: ", this.ipServer);
+     console.log("User: ", this.user);
+     console.log("Pasw: ",this.pasw);
+   }
+
 }
