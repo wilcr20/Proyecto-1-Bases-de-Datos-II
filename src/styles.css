@@ -12,3 +12,9 @@ body{
 
      background-color: rgba(30, 90, 30, 0.5);
   }
+
+
+  .card_center{
+    padding-left: 40%;
+    padding-top: 70px;
+  }
