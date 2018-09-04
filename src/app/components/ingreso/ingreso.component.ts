@@ -17,8 +17,8 @@ export class IngresoComponent  {
 
 
 
-   ipServer:string="";
-   user:string =":v";
+   ipServer:string="localhost";
+   user:string ="";
    pasw:string="";
    datos:any;
 
@@ -39,7 +39,6 @@ export class IngresoComponent  {
              console.log("datos: ", this.datos);
              if(this.datos === true){
               swal('Correcto...', "Ingreso Exitoso.", 'success');
-              document.getElementById("loginModal").remove();
              }
              if(this.datos === false){
               swal('Incorrecto...', "Verifique que las credenciales ingresadas sean correctas..", 'error');
