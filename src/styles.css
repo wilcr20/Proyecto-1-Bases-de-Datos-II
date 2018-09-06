@@ -1,20 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
 
-body{
-  background: url("https://image.freepik.com/foto-gratis/textura-de-fondo_1404-93.jpg") no-repeat center center fixed;
-        background-size: cover;
-        -moz-background-size: cover;
-        -webkit-background-size: cover;
-        -o-background-size: cover;
+body {
+    background: url("http://www.floreschapa.mx/images/Descargar%20Pack%20Wallpaper%20Gratis%20Abstractos%20(5).jpg") no-repeat center center fixed;
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
 }
 
 .special-card {
+    background-color: rgba(30, 90, 30, 0.5);
+}
 
-     background-color: rgba(30, 90, 30, 0.5);
-  }
-
-
-  .card_center{
+.card_center {
     padding-left: 40%;
     padding-top: 70px;
-  }
+}
+
+li:hover {
+    background-color: gray;
+    color: azure;
+}

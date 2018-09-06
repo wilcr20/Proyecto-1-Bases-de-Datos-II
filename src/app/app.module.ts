@@ -9,6 +9,9 @@ import { IngresoComponent } from './components/ingreso/ingreso.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 
+import {APP_ROUTING} from './app.routes';
+// se importan rutas
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +23,8 @@ import { HomeComponent } from './components/home/home.component';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    APP_ROUTING
   ],
   providers: [],
   bootstrap: [AppComponent]

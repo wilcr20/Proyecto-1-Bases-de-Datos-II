@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from "rxjs/operators";
 import swal from'sweetalert2';
 import { RequestArgs } from '@angular/http/src/interfaces';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-ingreso',
@@ -13,16 +14,13 @@ import { RequestArgs } from '@angular/http/src/interfaces';
 })
 export class IngresoComponent  {
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient, private router:Router) { }
 
 
    ipServer:string="localhost";
-   user:string ="";
-   pasw:string="";
-   datos:any;
-
-
+   user:string ="Wilfred";
+   pasw:string="123456789";
+   public datos:any;
 
    public conect(){
 
@@ -39,19 +37,23 @@ export class IngresoComponent  {
              console.log("datos: ", this.datos);
              if(this.datos === true){
               swal('Correcto...', "Ingreso Exitoso.", 'success');
+              //this.obtenerDB();
+              document.getElementById("closemodal").click();
+              this.router.navigate(['home']);  // redirecciona a ruta
              }
              if(this.datos === false){
               swal('Incorrecto...', "Verifique que las credenciales ingresadas sean correctas..", 'error');
              }
-
+ 
            },
            err => {
             swal('Incorrecto...', "Error de conexion con endpoint /conectarServer.", 'error');
              console.log("Error ",err);
            }
          )
+        }
 
 
-}
+
 
 }

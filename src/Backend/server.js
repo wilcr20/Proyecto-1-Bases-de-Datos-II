@@ -18,9 +18,13 @@ app.use(function(req, res, next) {
 
 
 app.put('/conectarServer', ctrl.conectarServer);
+app.get('/obtenerDB', ctrl.obtenerDb);
+app.put('/usarDB', ctrl.usarDB);
+app.put('/mostrarTablas', ctrl.mostrarTablas);
+
 
 app.get('/', function(req, res) {
-    res.send('Hello World!');
+    res.send('Servidor de NodeJs para proyecto Bases de datos II!');
 });
 
 app.listen(3000, function() {

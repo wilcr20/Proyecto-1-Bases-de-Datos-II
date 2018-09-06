@@ -1,3 +1,32 @@
-<p>
-  home works!
-</p>
+<div id="wrapper">
+
+    <strong style="color:rgb(143, 69, 162); font-size:30px;">Base de dato actual:  </strong> <i style="font-size:25px;">{{DBActual}}</i>
+    <!-- Sidebar -->
+    <ul class="nav sidebar-nav">
+
+        <li class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Seleccionar base de Dato a utilizar <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li (click)="cambioDb(d)" *ngFor="let d of datos">{{d.name}}</li>
+            </ul>
+        </li>
+    </ul>
+    <button *ngIf="dbSeleccionada" (click)="mostrarTablas()" class="btn btn-success">Mostrar tabas de base de dato actual.</button>
+
+
+</div>
+
+
+<div style="padding-top:4%;">
+    <blockquote style="color:red">-----------------------------------------------------------------------</blockquote>
+    <hr>
+    <div *ngIf="tablasDB?.length > 0" class="card-columns">
+        <div class="card" *ngFor="let t of tablasDB" style="width: 18rem;">
+            <div class="card-body" style="color:rgb(10, 41, 97)">
+                <h5 class="card-title">Tabla {{t.TABLE_NAME}}</h5>
+                <hr>
+                <button class="btn btn-default">Utilizar tabla.</button>
+            </div>
+        </div>
+    </div>
+</div>
