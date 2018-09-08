@@ -22,6 +22,7 @@ app.get('/obtenerDB', ctrl.obtenerDb);
 app.put('/usarDB', ctrl.usarDB);
 app.put('/mostrarTablas', ctrl.mostrarTablas);
 app.put('/obtenerEsquemas', ctrl.obtenerEsquemas);
+app.put('/crearEsquema', ctrl.crearEsquema);
 
 
 

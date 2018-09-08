@@ -23,20 +23,23 @@ export class HomeComponent implements OnInit {
    dbSeleccionada:boolean= false;
    tablasDB:any;
    tablaSeleccionada= 'NULL';
-   esquemadb:any;
+   esquemadb:any;  // guarad lista d eesqumeas de la bd actual
+
 
    /// variables ngModel
    alias:string="";
    metodo:string="Insert";
-   esquemaTabla:string;
-   esquemaProc:string;
+   esquemaTabla:string;  // esquema q posee tabla
+   esquemaProc:string="dbo";   // nuevo o ya existente
+   metodoProc:string;
 
   public genera(){
     var xd = document.getElementById("metodoSelect");
-    this.esquemaProc = xd.options[xd.selectedIndex].value;
-    console.log(this.esquemaProc);
+    this.metodoProc = xd.options[xd.selectedIndex].value;
+    console.log(this.metodoProc);
+    this.crearEsquemas();
 
-    this.mostrarEsquema();
+    
 
   }
 
@@ -67,6 +70,7 @@ export class HomeComponent implements OnInit {
 
   public usarTabla(tabla:string){
     this.tablaSeleccionada= tabla;
+    this.mostrarEsquema();
   }
 
   public mostrarEsquema(){
@@ -74,6 +78,17 @@ export class HomeComponent implements OnInit {
       db:this.DBActual
     }
     this.mostrarEsquemas(envia);
+  }
+
+  public crearEsquemas(){
+    let envia= {
+      db:this.DBActual,
+      nombre:this.esquemaProc
+    }
+    console.log(this.esquemadb ,"contiene ", this.esquemaProc,"?" );
+
+
+    //this.crearEsquema(envia);
   }
 
 
@@ -140,11 +155,28 @@ export class HomeComponent implements OnInit {
       success => { 
         console.log("suc<. ",success);
         this.esquemadb= success.data;
-        console.log("datos de mostrar sequeema: ", this.esquemadb);
+        console.log("datos de mostrar esquema: ", this.esquemadb);
 
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /obtenerEsquemas.", 'error');
+        console.log("Error ",err);
+      }
+    )
+  }
+
+  public crearEsquema(envia){
+    console.log("Entra a enviA, ",envia);
+    return this.http.put("http://localhost:3000/crearEsquema",envia)
+    .subscribe(
+      success => { 
+        console.log("suc<. ",success);
+        this.esquemadb= success.data;
+        console.log("datos de crear Esquema : ", this.esquemadb);
+
+      },
+      err => {
+       swal('Incorrecto...', "Error de conexion con endpoint /crearEsquema.", 'error');
         console.log("Error ",err);
       }
     )

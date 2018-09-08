@@ -74,3 +74,21 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
     //console.log("callback: ", callback);
     call_SQL.executeRequest(request, callback)
 }
+
+
+exports.crearEsquema = function crearEsquema(db,nombre, callback) {
+    var request = new Request("use " + db+ "; create schema "+ nombre+ ";" , function(err) {
+        if (err) {
+            callback({
+                success: false,
+                data: err,
+                error: request.error, 
+                title: 'Error',
+                message: 'Error al obtener información',
+                type: 'error'
+            });
+        }
+    });
+    //console.log("callback: ", callback);
+    call_SQL.executeRequest(request, callback)
+}

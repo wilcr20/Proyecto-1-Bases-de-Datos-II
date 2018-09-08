@@ -109,5 +109,26 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
             })
         }
     })
+}
+exports.crearEsquema = function crearEsquema(data, callback) {
+    proc_SQL.crearEsquema(data.body.db,data.body.nombre, function(resultado) {
+        console.log("Rees  ", resultado);
+        if (resultado.success) {
+            callback({
+                succes: true,
+                data: resultado.data,
+                message: resultado.message,
+                msgCode: 200,
+            })
+
+        } else {
+            callback({
+                success: false,
+                data: resultado.message,
+                message: resultado.message,
+                msgCode: 400
+            })
+        }
+    })
 
 }
