@@ -36,3 +36,12 @@ exports.mostrarTablas = function(rRequest, rResponse) {
 
     });
 };
+
+exports.obtenerEsquemas = function(rRequest, rResponse) {
+    logica.obtenerEsquemas(rRequest, function(data) {
+        rResponse.send(data);
+        rResponse.end();
+        console.log("DATA RESUELTA de obtenerEsquemas: ", data);
+
+    });
+};

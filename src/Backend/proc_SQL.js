@@ -47,7 +47,24 @@ exports.mostrarTablas = function mostrarTablas(data, callback) {
             callback({
                 success: false,
                 data: err,
-                error: request.error,
+                error: request.error, 
+                title: 'Error',
+                message: 'Error al obtener información',
+                type: 'error'
+            });
+        }
+    });
+    //console.log("callback: ", callback);
+    call_SQL.executeRequest(request, callback)
+}
+
+exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
+    var request = new Request("use " + data + "; select DISTINCT TABLE_SCHEMA from INFORMATION_SCHEMA.COLUMNS;", function(err) {
+        if (err) {
+            callback({
+                success: false,
+                data: err,
+                error: request.error, 
                 title: 'Error',
                 message: 'Error al obtener información',
                 type: 'error'

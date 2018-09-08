@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
    dbSeleccionada:boolean= false;
    tablasDB:any;
    tablaSeleccionada= 'NULL';
+   esquemadb:any;
 
    /// variables ngModel
    alias:string="";
@@ -34,6 +35,8 @@ export class HomeComponent implements OnInit {
     var xd = document.getElementById("metodoSelect");
     this.esquemaProc = xd.options[xd.selectedIndex].value;
     console.log(this.esquemaProc);
+
+    this.mostrarEsquema();
 
   }
 
@@ -64,6 +67,13 @@ export class HomeComponent implements OnInit {
 
   public usarTabla(tabla:string){
     this.tablaSeleccionada= tabla;
+  }
+
+  public mostrarEsquema(){
+    let envia= {
+      db:this.DBActual
+    }
+    this.mostrarEsquemas(envia);
   }
 
 
@@ -123,6 +133,22 @@ export class HomeComponent implements OnInit {
     )
   }
 
+  public mostrarEsquemas(envia){
+    console.log("Entra a enviA, ",envia);
+    return this.http.put("http://localhost:3000/obtenerEsquemas",envia)
+    .subscribe(
+      success => { 
+        console.log("suc<. ",success);
+        this.esquemadb= success.data;
+        console.log("datos de mostrar sequeema: ", this.esquemadb);
+
+      },
+      err => {
+       swal('Incorrecto...', "Error de conexion con endpoint /obtenerEsquemas.", 'error');
+        console.log("Error ",err);
+      }
+    )
+  }
 
 
 

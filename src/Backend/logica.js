@@ -64,11 +64,34 @@ exports.usarDB = function usarDB(data, callback) {
         }
     })
 
-}
+} 
 
 
 exports.mostrarTablas = function mostrarTablas(data, callback) {
     proc_SQL.mostrarTablas(data.body.db, function(resultado) {
+        if (resultado.success) {
+            callback({
+                succes: true,
+                data: resultado.data,
+                message: resultado.message,
+                msgCode: 200,
+            })
+
+        } else {
+            callback({
+                success: false,
+                data: resultado.message,
+                message: resultado.message,
+                msgCode: 400
+            })
+        }
+    })
+
+}
+
+exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
+    proc_SQL.obtenerEsquemas(data.body.db, function(resultado) {
+        console.log("Rees  ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,
