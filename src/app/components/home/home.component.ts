@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
     console.log(this.metodoProc);
     this.crearEsquemas();
 
-    
+
 
   }
 
@@ -87,14 +87,22 @@ export class HomeComponent implements OnInit {
     }
     var l=this.esquemadb.length;
 
-    for(var i=0;i<l;i++){
-      if(this.esquemadb[i].TABLE_SCHEMA===this.esquemaProc){
-        //crear procedimiento
-        console.log(" crear procedi" );
+    var i=0;
+
+    while (i< l){
+      if(this.esquemadb[i].SCHEMA_NAME == this.esquemaProc){
+        console.log("Iguales.... ", this.esquemaProc);
         break;
       }
+      i++;
     }
-    this.crearEsquema(envia); 
+    if(i == l){
+      console.log("No hayado crear");
+      this.crearEsquema(envia);
+    }
+
+
+
   }
 
 
@@ -126,7 +134,6 @@ export class HomeComponent implements OnInit {
     return this.http.put("http://localhost:3000/usarDB",envia)
     .subscribe(
       success => {
-        console.log("datos: ", success);
         this.dbSeleccionada=true;
         swal('Correcto...', "Ingreso de base de datos Exitoso.", 'success');
 
@@ -158,10 +165,8 @@ export class HomeComponent implements OnInit {
     console.log("Entra a enviA, ",envia);
     return this.http.put("http://localhost:3000/obtenerEsquemas",envia)
     .subscribe(
-      success => { 
-        console.log("suc<. ",success);
+      success => {
         this.esquemadb= success.data;
-        console.log("datos de mostrar esquema: ", this.esquemadb);
 
       },
       err => {
@@ -172,11 +177,11 @@ export class HomeComponent implements OnInit {
   }
 
   public crearEsquema(envia){
-    console.log("Entra a enviA desde creaer squema, ",envia);
+    console.log("Entra a enviA desde crear esquema, ",envia);
     return this.http.put("http://localhost:3000/crearEsquema",envia)
     .subscribe(
-      success => { 
-        console.log("sucessss. ",success);
+      success => {
+        console.log("sucessss de crear esquema. ",success);
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /crearEsquema.", 'error');

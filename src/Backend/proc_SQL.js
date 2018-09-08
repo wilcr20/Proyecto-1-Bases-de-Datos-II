@@ -59,7 +59,7 @@ exports.mostrarTablas = function mostrarTablas(data, callback) {
 }
 
 exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
-    var request = new Request("use " + data + "; select DISTINCT TABLE_SCHEMA from INFORMATION_SCHEMA.COLUMNS;", function(err) {
+    var request = new Request("use " + data + "; select * from INFORMATION_SCHEMA.SCHEMATA;", function(err) {
         if (err) {
             callback({
                 success: false,
@@ -77,7 +77,7 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
 
 
 exports.crearEsquema = function crearEsquema(db, nombre, callback) {
-    var request = new Request(" create schema " + nombre + ";", function(err) {
+    var request = new Request("use " + db + ";  EXEC ('CREATE SCHEMA [" + nombre + "]');", function(err) {
         if (err) {
             callback({
                 success: false,

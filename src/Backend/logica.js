@@ -44,7 +44,6 @@ exports.obtenerDb = function obtenerDb(callback) {
 }
 
 exports.usarDB = function usarDB(data, callback) {
-    console.log("DATA BODY, ", data.body);
     proc_SQL.usarDB(data.body.db, function(resultado) {
         if (resultado.success) {
             callback({
@@ -64,7 +63,7 @@ exports.usarDB = function usarDB(data, callback) {
         }
     })
 
-} 
+}
 
 
 exports.mostrarTablas = function mostrarTablas(data, callback) {
@@ -91,7 +90,6 @@ exports.mostrarTablas = function mostrarTablas(data, callback) {
 
 exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
     proc_SQL.obtenerEsquemas(data.body.db, function(resultado) {
-        console.log("Rees  ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,
@@ -111,9 +109,9 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
     })
 }
 exports.crearEsquema = function crearEsquema(data, callback) {
-    console.log(data.body);
-    proc_SQL.crearEsquema(data.body.db,data.body.nombre, function(resultado) {
-        console.log("Rees de crearsqu  ", resultado);
+    console.log("Body de crear esquema ", data.body);
+    proc_SQL.crearEsquema(data.body.db, data.body.nombre, function(resultado) {
+        console.log("Rees de crearEsqeuma  ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,
