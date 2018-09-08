@@ -85,10 +85,16 @@ export class HomeComponent implements OnInit {
       db:this.DBActual,
       nombre:this.esquemaProc
     }
-    console.log(this.esquemadb ,"contiene ", this.esquemaProc,"?" );
+    var l=this.esquemadb.length;
 
-
-    //this.crearEsquema(envia);
+    for(var i=0;i<l;i++){
+      if(this.esquemadb[i].TABLE_SCHEMA===this.esquemaProc){
+        //crear procedimiento
+        console.log(" crear procedi" );
+        break;
+      }
+    }
+    this.crearEsquema(envia); 
   }
 
 
@@ -166,14 +172,11 @@ export class HomeComponent implements OnInit {
   }
 
   public crearEsquema(envia){
-    console.log("Entra a enviA, ",envia);
+    console.log("Entra a enviA desde creaer squema, ",envia);
     return this.http.put("http://localhost:3000/crearEsquema",envia)
     .subscribe(
       success => { 
-        console.log("suc<. ",success);
-        this.esquemadb= success.data;
-        console.log("datos de crear Esquema : ", this.esquemadb);
-
+        console.log("sucessss. ",success);
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /crearEsquema.", 'error');

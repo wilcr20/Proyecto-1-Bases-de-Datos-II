@@ -49,7 +49,7 @@ exports.obtenerEsquemas = function(rRequest, rResponse) {
 exports.crearEsquema = function(rRequest, rResponse) {
     logica.crearEsquema(rRequest, function(data) {
         rResponse.send(data);
-        rResponse.end();
+        //rResponse.end();
         console.log("DATA RESUELTA de crearEsquema: ", data);
 
     });

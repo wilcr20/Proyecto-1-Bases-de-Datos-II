@@ -111,8 +111,9 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
     })
 }
 exports.crearEsquema = function crearEsquema(data, callback) {
+    console.log(data.body);
     proc_SQL.crearEsquema(data.body.db,data.body.nombre, function(resultado) {
-        console.log("Rees  ", resultado);
+        console.log("Rees de crearsqu  ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,

@@ -77,7 +77,15 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
 
 
 exports.crearEsquema = function crearEsquema(db,nombre, callback) {
-    var request = new Request("use " + db+ "; create schema "+ nombre+ ";" , function(err) {
+    console.log("----------------> use " + db+ "; create schema "+ nombre+ ";");
+    var request = new Request(" use " + db+ "; IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name =" +nombre+") BEGIN EXEC ('CREATE SCHEMA "+nombre+";');END;" , 
+    
+    
+    
+    
+    
+    
+    function(err) {
         if (err) {
             callback({
                 success: false,
