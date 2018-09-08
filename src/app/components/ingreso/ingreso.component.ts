@@ -18,8 +18,8 @@ export class IngresoComponent  {
 
 
    ipServer:string="localhost";
-   user:string ="marcoev3011";
-   pasw:string="1234";
+   user:string ="Wilfred";
+   pasw:string="123456789";
    public datos:any;
 
    public conect(){
@@ -44,7 +44,7 @@ export class IngresoComponent  {
              if(this.datos === false){
               swal('Incorrecto...', "Verifique que las credenciales ingresadas sean correctas..", 'error');
              }
- 
+
            },
            err => {
             swal('Incorrecto...', "Error de conexion con endpoint /conectarServer.", 'error');

@@ -47,7 +47,7 @@ exports.mostrarTablas = function mostrarTablas(data, callback) {
             callback({
                 success: false,
                 data: err,
-                error: request.error, 
+                error: request.error,
                 title: 'Error',
                 message: 'Error al obtener información',
                 type: 'error'
@@ -64,7 +64,7 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
             callback({
                 success: false,
                 data: err,
-                error: request.error, 
+                error: request.error,
                 title: 'Error',
                 message: 'Error al obtener información',
                 type: 'error'
@@ -76,21 +76,13 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
 }
 
 
-exports.crearEsquema = function crearEsquema(db,nombre, callback) {
-    console.log("----------------> use " + db+ "; create schema "+ nombre+ ";");
-    var request = new Request(" use " + db+ "; IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name =" +nombre+") BEGIN EXEC ('CREATE SCHEMA "+nombre+";');END;" , 
-    
-    
-    
-    
-    
-    
-    function(err) {
+exports.crearEsquema = function crearEsquema(db, nombre, callback) {
+    var request = new Request(" create schema " + nombre + ";", function(err) {
         if (err) {
             callback({
                 success: false,
                 data: err,
-                error: request.error, 
+                error: request.error,
                 title: 'Error',
                 message: 'Error al obtener información',
                 type: 'error'
