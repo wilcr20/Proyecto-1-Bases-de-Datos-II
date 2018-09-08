@@ -11,22 +11,72 @@
             </ul>
         </li>
     </ul>
-    <button *ngIf="dbSeleccionada" (click)="mostrarTablas()" class="btn btn-success">Mostrar tabas de base de dato actual.</button>
-
+    <button *ngIf="dbSeleccionada" (click)="mostrarTablas()" class="btn btn-success">Mostrar tablas de base de dato actual.</button>
 
 </div>
 
+<div style="padding-top:2%;" *ngIf="tablasDB?.length == 0">
+    <div class="alert alert-danger" role="alert">
+        <strong>¿No aparece nada?</strong>
+        <br>- Presione "Mostrar tablas de base de dato actual" para actualizar pantalla.
+        <br>- No posee tablas creadas para visualizar.
+        <br>- El usuario actual no posee privilegios para verlas.
+    </div>
+</div>
 
-<div style="padding-top:4%;">
-    <blockquote style="color:red">-----------------------------------------------------------------------</blockquote>
-    <hr>
-    <div *ngIf="tablasDB?.length > 0" class="card-columns">
+<div style="padding-top:2%;">
+    <div *ngIf="tablasDB?.length > 0" class="card-group">
         <div class="card" *ngFor="let t of tablasDB" style="width: 18rem;">
             <div class="card-body" style="color:rgb(10, 41, 97)">
                 <h5 class="card-title">Tabla {{t.TABLE_NAME}}</h5>
                 <hr>
-                <button class="btn btn-default">Utilizar tabla.</button>
+                <button (click)="usarTabla(t.TABLE_NAME)" class="btn btn-default">Utilizar tabla.</button>
             </div>
         </div>
     </div>
+</div>
+<br>
+<div *ngIf="tablaSeleccionada != 'NULL' " style="padding-top:2%; background-color:rgb(255, 255, 255)">
+    <form style="padding-top:6px; padding-bottom:15px;">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputEmail4">Alias a utilizar </label>
+                <input type="text" [(ngModel)]="alias" name="alias" class="form-control" placeholder="GA">
+            </div>
+
+            <div class="form-group col-md-2">
+                <div class="form-group col-md-4">
+                    <label for="inputState">Esquemas disponibles</label>
+                    <select id="inputState" class="form-control">
+                      <option selected >------</option>
+                      <option>Insert</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="inputCity">Esquema a usar para el procedimiento</label>
+                <input type="text" class="form-control">
+            </div>
+
+        </div>
+        <div class="form-row">
+
+            <div class="form-group col-md-4">
+                <label for="inputState">Método a utilizar</label>
+                <select id="metodoSelect" class="form-control">
+              <option selected>Select</option>
+              <option>Insert</option>
+              <option>Delete</option>
+              <option>Update</option>
+            </select>
+            </div>
+        </div>
+        <div>
+            <button type="submit" (click)="genera()" class="btn btn-primary">Generar procedimiento.</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary">Generar y ejecutar procedimiento.</button>
+        </div>
+
+    </form>
+    {{esquemaProc}} {{alias}}
+
 </div>

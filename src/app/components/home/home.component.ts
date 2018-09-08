@@ -22,6 +22,20 @@ export class HomeComponent implements OnInit {
    DBActual:string ="NULL";  // variable usada para moverse entre bases de datos y obtener tablas
    dbSeleccionada:boolean= false;
    tablasDB:any;
+   tablaSeleccionada= 'NULL';
+
+   /// variables ngModel
+   alias:string="";
+   metodo:string="Insert";
+   esquemaTabla:string;
+   esquemaProc:string;
+
+  public genera(){
+    var xd = document.getElementById("metodoSelect");
+    this.esquemaProc = xd.options[xd.selectedIndex].value;
+    console.log(this.esquemaProc);
+
+  }
 
 
   ngOnInit() {
@@ -31,6 +45,7 @@ export class HomeComponent implements OnInit {
 
 
   public cambioDb(db){
+    this.tablaSeleccionada='NULL';
     this.tablasDB= [];
     this.DBActual= db.name;
     let envia= {
@@ -45,6 +60,10 @@ export class HomeComponent implements OnInit {
       db:this.DBActual
     }
     this.mostrarTablasDB(envia);
+  }
+
+  public usarTabla(tabla:string){
+    this.tablaSeleccionada= tabla;
   }
 
 
