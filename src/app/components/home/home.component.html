@@ -41,53 +41,53 @@
 
 
         <div class="form-row">
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-2" style="padding-left:50px;">
                 <label style="color:blue" for="inputEmail4">Alias a utilizar </label>
                 <input type="text" [(ngModel)]="alias" name="alias" class="form-control">
             </div>
-
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-2">
-                <label style="color:blue" for="inputState">Esquemas disponibles en base de datos actual.</label>
+            <div class="form-group col-md-2" style="padding-left:50px;">
+                <label style="color:blue" for="inputState">Esquemas disponibles.</label>
                 <select id="inputState" class="form-control">
                       <option selected >-----------</option>
                       <option *ngFor="let sch of esquemadb">{{sch.SCHEMA_NAME}}</option>
                     </select>
             </div>
-        </div>
-
-
-        <div class="form-group" style="padding-left:20%;padding-right:20%;">
-            <label for="exampleFormControlTextarea1">Example textarea</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-2" style="padding-left:50px;">
                 <label style="color:blue" for="inputCity">Esquema a usar para el procedimiento</label>
                 <input type="text" [(ngModel)]="esquemaProc" name="esquemaProc" class="form-control">
             </div>
-        </div>
-
-
-        <div class="form-row">
-
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-2" style="padding-left:70px;">
                 <label style="color:blue" for="inputState">Método a utilizar</label>
                 <select id="metodoSelect" class="form-control">
               <option selected>Select</option>
-              <option>Insert</option>
+              <option>Insertar</option>
               <option>Delete</option>
               <option>Update</option>
             </select>
             </div>
         </div>
 
-        <div class="form-group">
-            <button type="submit" (click)="genera()" class="btn btn-primary">Generar procedimiento.</button>&nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="submit" class="btn btn-primary">Generar y ejecutar procedimiento.</button>
+        <DIV>
+            <label *ngFor="let p of parametrosTabla; let i=index;">{{p.COLUMN_NAME}}</label>
+            <input type="text" placeholder="Ingrese dato a envias">
+        </DIV>
+
+
+        <div class="form-group" style="padding-left:12px; padding-top:2%;padding-right:70%;">
+            <hr>
+            <label style="color:blue">Query</label>
+            <textarea class="form-control" id="query" rows="6" disabled [(ngModel)]="queryGenerado" name="queryGenerado"></textarea>
+            <hr>
+        </div>
+
+
+
+        <div class="form-row">
+            <div class="form-group col-md-2" style="padding-left:20px;">
+                <button type="submit" (click)="genera()" class="btn btn-primary">Generar procedimiento.</button>
+                <br><br>
+                <button type="submit" (click)="ejecutar()" class="btn btn-primary">Ejecutar procedimiento generado.</button>
+            </div>
         </div>
 
     </form>

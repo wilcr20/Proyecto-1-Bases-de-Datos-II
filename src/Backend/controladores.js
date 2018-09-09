@@ -55,7 +55,7 @@ exports.obtenerEsquemaTabla = function(rRequest, rResponse) {
     logica.obtenerEsquemaTabla(rRequest, function(data) {
         rResponse.send(data);
         rResponse.end();
-        console.log("DATA RESUELTA de obtenerEsquemaTabla: ", data);
+        //console.log("DATA RESUELTA de obtenerEsquemaTabla: ", data);
 
     });
 };
@@ -64,7 +64,7 @@ exports.hacerProcedimiento = function(rRequest, rResponse) {
     logica.hacerProcedimiento(rRequest, function(data) {
         rResponse.send(data);
         rResponse.end();
-        console.log("DATA RESUELTA de hacerProcedimiento: ", data);
+        console.log("DATA RESUELTA de hacerProc: ", data);
 
     });
 };

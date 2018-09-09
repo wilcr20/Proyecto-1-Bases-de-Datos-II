@@ -3,7 +3,7 @@ go
 drop database ProyectoBasesII
 go
 create database ProyectoBasesII
-GO 
+GO
 use ProyectoBasesII
 GO
 create table personas
@@ -26,28 +26,28 @@ create table test.personas2
     apellido2   varchar(30)     NOT NULL
 )
 GO
-create view vista_personas 
-as 
+create view vista_personas
+as
 select * from personas
 go
-create view test.vista_personas2 
-as 
+create view test.vista_personas2
+as
 select * from test.personas2
 GO
 Create Procedure getPK(
 	@schema		varchar(30),
 	@table		varchar(30),
 	@name		varchar(30) output,
-	@type		varchar(30) output) 
+	@type		varchar(30) output)
 AS
-	
-SELECT @name=Col.COLUMN_NAME, @type=Col_type.DATA_TYPE from 
-    INFORMATION_SCHEMA.TABLE_CONSTRAINTS Tab, 
+
+SELECT @name=Col.COLUMN_NAME, @type=Col_type.DATA_TYPE from
+    INFORMATION_SCHEMA.TABLE_CONSTRAINTS Tab,
     INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE Col,
 	INFORMATION_SCHEMA.COLUMNS Col_type
-WHERE 
+WHERE
 	Tab.TABLE_SCHEMA = @schema
-    AND Tab.Table_Name = @table	
+    AND Tab.Table_Name = @table
 	AND Tab.Constraint_Type = 'PRIMARY KEY'
 
 	AND Col.TABLE_SCHEMA = Tab.TABLE_SCHEMA
@@ -56,18 +56,21 @@ WHERE
     AND Col.Table_Name = Tab.Table_Name
 	AND Col_type.TABLE_NAME = Tab.TABLE_NAME
 
-	AND Col.COLUMN_NAME = Col_type.COLUMN_NAME 
+	AND Col.COLUMN_NAME = Col_type.COLUMN_NAME
 
 go
+
+
+
 
 select * from INFORMATION_SCHEMA.COLUMNS
 
 GO
 --drop procedure  genera_insertar
 --GO
-CREATE PROCEDURE genera_insertar 
+CREATE PROCEDURE genera_insertar
 (
-    @prefijo		VARCHAR (30), 
+    @prefijo		VARCHAR (30),
     @nombre_tabla	VARCHAR (50),
     @esquema_t		VARCHAR (30),
     @esquema_p		VARCHAR (30)
@@ -81,7 +84,7 @@ DECLARE
     @columna varchar(50),
     @tipo_datos varchar(50),
     @largo varchar(50)
-declare c_columnas CURSOR FOR 
+declare c_columnas CURSOR FOR
     select COLUMN_NAME,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS
     where TABLE_SCHEMA=@esquema_t and TABLE_NAME=LOWER(@nombre_tabla)
 BEGIN
@@ -105,7 +108,7 @@ BEGIN
         END
         SET @l_columnas=@l_columnas+@columna+', '
         SET @l_parametros=@l_parametros+'@'+@columna+', '
-        
+
         FETCH NEXT FROM c_columnas
         INTO @columna , @tipo_datos, @largo
     END
@@ -125,11 +128,11 @@ END
 
 GO
 create procedure genera_delete(
-	@prefijo		VARCHAR (30), 
+	@prefijo		VARCHAR (30),
     @nombre_tabla	VARCHAR (50),
 	@esquema_t		VARCHAR	(30),
     @esquema_p		VARCHAR (30)
-)as 
+)as
 DECLARE
     @sql		Nvarchar (2000),
 	@pk_type	varchar	 (30),
@@ -141,9 +144,9 @@ begin
 			--print(@pk_type)
 			IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = @esquema_p)
 				set @esquema_p='dbo'--aqui el schema va a cambiar cuando lo manda vacio desde el front end queriendo decir q lo quiere en el default
-			SET @sql='CREATE PROCEDURE '+ @esquema_p+'.'+@prefijo+'_Delete_'+@nombre_tabla+'(@pk '+@pk_type+') 
-			as 
-			BEGIN 
+			SET @sql='CREATE PROCEDURE '+ @esquema_p+'.'+@prefijo+'_Delete_'+@nombre_tabla+'(@pk '+@pk_type+')
+			as
+			BEGIN
 				DELETE FROM '+ @esquema_t+'.'+@nombre_tabla+' where '+@pk_name+'=@pk;
 			END;'
 			EXECUTE sp_executesql @sql
@@ -153,12 +156,14 @@ begin
 		print 'La tabla '+@nombre_tabla+' a la que quiere crear el delete no existe en el esquema '+@esquema_t
 end;
 go
+
+
 create procedure genera_select (
-	@prefijo		VARCHAR (30), 
+	@prefijo		VARCHAR (30),
     @nombre_tabla	VARCHAR (50),
 	@esquema_t		VARCHAR	(30),
     @esquema_p		VARCHAR (30)
-)as 
+)as
 DECLARE
     @sql			Nvarchar (2000),
     @parametros		VARCHAR(500),
@@ -166,7 +171,7 @@ DECLARE
     @columna		varchar(50),
     @tipo_datos		varchar(50),
     @largo			varchar(50)
-declare c_columnas CURSOR FOR 
+declare c_columnas CURSOR FOR
     select COLUMN_NAME,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS
     where TABLE_SCHEMA=@esquema_t and TABLE_NAME=LOWER(@nombre_tabla)
 begin
@@ -194,7 +199,7 @@ begin
 					END
 				set @where = @where+'((@'+@columna+' is NULL) or ('+@columna+'=@'+@columna+'))
 					and '
-        
+
 				FETCH NEXT FROM c_columnas
 				INTO @columna , @tipo_datos, @largo
 			END
@@ -204,10 +209,10 @@ begin
 			DEALLOCATE c_columnas;
 
 			set @sql=@sql+@parametros + '
-			AS 
-			BEGIN 
+			AS
+			BEGIN
 				Select * from '
-			set @sql=@sql+@esquema_t+'.'+@nombre_tabla+@where+'; 
+			set @sql=@sql+@esquema_t+'.'+@nombre_tabla+@where+';
 			END'
 			EXECUTE sp_executesql @sql
 			print @sql
@@ -217,12 +222,15 @@ begin
 end
 go
 
+
+
+
 create procedure genera_update (
-	@prefijo		VARCHAR (30), 
+	@prefijo		VARCHAR (30),
     @nombre_tabla	VARCHAR (50),
 	@esquema_t		VARCHAR	(30),
     @esquema_p		VARCHAR (30)
-)as 
+)as
 DECLARE
     @sql			Nvarchar (2000),
     @parametros		VARCHAR(500),
@@ -232,7 +240,7 @@ DECLARE
     @largo			varchar(50),
 	@pk_name		varchar(30),
 	@pk_type		varchar(30)
-declare c_columnas CURSOR FOR 
+declare c_columnas CURSOR FOR
     select COLUMN_NAME,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS
     where TABLE_SCHEMA=@esquema_t and TABLE_NAME=LOWER(@nombre_tabla)
 begin
@@ -261,21 +269,21 @@ begin
 					END
 				set @update = @update+@columna+'=@'+@columna+',
 					'
-        
+
 				FETCH NEXT FROM c_columnas
 				INTO @columna , @tipo_datos, @largo
 			END
 			SET @parametros=SUBSTRING(@parametros,0,LEN(@parametros))+')'
-			SET @update=SUBSTRING(@update,0,LEN(@update)-7)+' 
+			SET @update=SUBSTRING(@update,0,LEN(@update)-7)+'
 				where '+@pk_name+'=@pk_'+@pk_name
 			CLOSE c_columnas
 			DEALLOCATE c_columnas;
 
 			set @sql=@sql+@parametros + '
-			AS 
-			BEGIN 
+			AS
+			BEGIN
 				Update '
-			set @sql=@sql+@esquema_t+'.'+@nombre_tabla+@update+'; 
+			set @sql=@sql+@esquema_t+'.'+@nombre_tabla+@update+';
 			END'
 			EXECUTE sp_executesql @sql
 			print @sql

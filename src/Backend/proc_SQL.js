@@ -111,7 +111,8 @@ exports.obtenerEsquemaTabla = function obtenerEsquemaTabla(db, nombreT, callback
 }
 
 exports.hacerProcedimiento = function hacerProcedimiento(db, tipo, prefijo, nombreT, nombreET, nombreEP, callback) {
-    var request = new Request("use " + db + "; EXEC genera_" + tipo + " " + prefijo + " " + nombreT + " " + nombreET + " " + nombreEP + ";", function(err) {
+    console.log("use " + db + "; EXEC genera_" + tipo + " '" + prefijo + "', '" + nombreT + "', '" + nombreET + "', '" + nombreEP + "' , '' ;");
+    var request = new Request("use " + db + "; EXEC genera_" + tipo + " '" + prefijo + "', '" + nombreT + "', '" + nombreET + "', '" + nombreEP + "' , '' ;", function(err) {
         if (err) {
             callback({
                 success: false,
@@ -145,7 +146,8 @@ exports.ejecutarProcedimiento = function ejecutarProcedimiento(db, nombreEP, pre
 }
 
 exports.obtenerParametros = function obtenerParametros(db, nombreET, nombreT, callback) {
-    var request = new Request("use " + db + ";select distinct COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_CATALOG= " + db + " and table_schema=" + nombreET + " and table_name=" + nombreT + ";", function(err) {
+    console.log("use " + db + "; select distinct COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_CATALOG= '" + db + "' and table_schema= '" + nombreT + "' and table_name= '" + nombreET + "' ;");
+    var request = new Request("use " + db + ";select distinct COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_CATALOG= '" + db + "' and table_schema= '" + nombreT + "' and table_name= '" + nombreET + "' ;", function(err) {
         if (err) {
             callback({
                 success: false,

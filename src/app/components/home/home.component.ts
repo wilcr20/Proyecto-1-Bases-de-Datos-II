@@ -33,11 +33,13 @@ export class HomeComponent implements OnInit {
    /// variables ngModel para enviar
    alias:string="GA";
    metodo:string="Insert";
-   esquemaTabla:string;  // esquema q posee tabla
+   esquemaTabla:any="xd";  // esquema q posee tabla
    esquemaProc:string="dbo";   // nuevo o ya existente
    metodoProc:string;
-   prefijo:string="GA";
    esquemaTablaAct:any; // esquema al que pertence la tabla seleccioanda
+   queryGenerado:string= "Select * from ...";
+
+   parametrosTabla:any;
 
    pr:any;
 
@@ -45,6 +47,11 @@ export class HomeComponent implements OnInit {
     var xd = document.getElementById("metodoSelect");
     this.metodoProc = xd.options[xd.selectedIndex].value;
     this.crearEsquemas();
+  }
+
+  public ejecutar(){
+    console.log("Obtner parametros");
+    this.obtenerParametross();
   }
 
 
@@ -62,7 +69,6 @@ export class HomeComponent implements OnInit {
       db:this.DBActual
     }
     this.usarDB(envia);
-
   }
 
   public mostrarTablas(){
@@ -99,6 +105,7 @@ export class HomeComponent implements OnInit {
     while (i< l){
       if(this.esquemadb[i].SCHEMA_NAME == this.esquemaProc){
         console.log("Iguales.... ", this.esquemaProc);
+        this.hacerProcedimientos(); // se hace procedimiernto con esquema ya en db
         break;
       }
       i++;
@@ -106,12 +113,12 @@ export class HomeComponent implements OnInit {
     if(i == l){
       console.log("No hayado crear");
       this.crearEsquema(envia);
+      setTimeout(() => {
+        this.hacerProcedimientos();
+      }, 2000);
+
     }
-
-
-
   }
-
 
 
   public obtenerEsquemaTablas(){
@@ -123,15 +130,25 @@ export class HomeComponent implements OnInit {
   }
 
   public hacerProcedimientos(){
+
+    var eT= this.esquemaTablaAct[0].TABLE_SCHEMA;
+
     let envia= {
       db:this.DBActual,
-      tipo:this.metodo,
-      prefijo:this.prefijo,
+      tipo:this.metodoProc,
+      prefijo:this.alias,
       nombreT:this.tablaSeleccionada,
-      nombreET:this.esquemaTabla,
+      nombreET:eT,
       nombreEP:this.esquemaProc
     }
     this.hacerProcedimiento(envia);
+    setTimeout(() => {
+
+      var xd = this.queryGenerado[0];
+      var que=xd.query
+      console.log("procc xd", que);
+      this.queryGenerado=que;
+    }, 2000);
   }
 
   public ejecutarProcedimientos(){
@@ -159,10 +176,12 @@ export class HomeComponent implements OnInit {
   }
 
   public obtenerParametross(){
+    var eT= this.esquemaTablaAct[0].TABLE_SCHEMA;
+
     let envia= {
       db:this.DBActual,
       nombreT:this.tablaSeleccionada,
-      nombreET:this.esquemaTabla
+      nombreET:eT
     }
     this.obtenerParametros(envia);
   }
@@ -255,8 +274,8 @@ export class HomeComponent implements OnInit {
     return this.http.put("http://localhost:3000/obtenerEsquemaTabla",envia)
     .subscribe(
       success => {
-        this.esquemaTablaAct= JSON.stringify(success.data);
-        console.log("sucessss eswuma tabla. ",this.esquemaTablaAct);
+        this.esquemaTablaAct= success.data;
+        console.log("sucessss esuqma tabla. ",this.esquemaTablaAct);
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /obtenerEsquemaTabla.", 'error');
@@ -266,30 +285,31 @@ export class HomeComponent implements OnInit {
   }
 
   public hacerProcedimiento(envia){
-    console.log("Entra a enviA desde hacerProcedimiento, ",envia);
+    console.log("---------------Entra a enviA desde hacerProcedimiento, ",envia);
     return this.http.put("http://localhost:3000/hacerProcedimiento",envia)
     .subscribe(
       success => {
-        this.pr= success;//agregar la variable para extraer los datos
-        console.log("sucessss. ",this.pr);
+        this.queryGenerado= success.data;
+        console.log("sucessss query generado. ",this.queryGenerado);
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /hacerProcedimiento.", 'error');
         console.log("Error ",err);
       }
     )
+
   }
 
   public ejecutarProcedimiento(envia){
-    console.log("Entra a enviA desde hacerProcedimiento, ",envia);
-    return this.http.put("http://localhost:3000/hacerProcedimiento",envia)
+    console.log("Entra a enviA desde ejecutarProcedimiento, ",envia);
+    return this.http.put("http://localhost:3000/ejecutarProcedimiento",envia)
     .subscribe(
       success => {
         this.pr= success;
         console.log("sucessss. ",this.pr);
       },
       err => {
-       swal('Incorrecto...', "Error de conexion con endpoint /hacerProcedimiento.", 'error');
+       swal('Incorrecto...', "Error de conexion con endpoint /ejecutarProcedimiento.", 'error');
         console.log("Error ",err);
       }
     )
@@ -297,17 +317,19 @@ export class HomeComponent implements OnInit {
 
   public obtenerParametros(envia){
     console.log("Entra a enviA desde obtenerParametros, ",envia);
+
     return this.http.put("http://localhost:3000/obtenerParametros",envia)
     .subscribe(
       success => {
-        this.datos2= success;//agregar la variable para extraer los datos
-        console.log("sucessss. ",this.datos2);
+        this.parametrosTabla= success.data;//agregar la variable para extraer los datos
+        console.log("sucessss de obtener param. ",this.parametrosTabla);
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /obtenerParametros.", 'error');
         console.log("Error ",err);
       }
     )
+
   }
 
 }
