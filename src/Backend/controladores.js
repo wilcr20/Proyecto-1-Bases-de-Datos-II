@@ -50,3 +50,39 @@ exports.crearEsquema = function(rRequest, rResponse) {
 
     });
 };
+
+exports.obtenerEsquemaTabla = function(rRequest, rResponse) {
+    logica.obtenerEsquemaTabla(rRequest, function(data) {
+        rResponse.send(data);
+        rResponse.end();
+        console.log("DATA RESUELTA de obtenerEsquemaTabla: ", data);
+
+    });
+};
+
+exports.hacerProcedimiento = function(rRequest, rResponse) {
+    logica.hacerProcedimiento(rRequest, function(data) {
+        rResponse.send(data);
+        rResponse.end();
+        console.log("DATA RESUELTA de hacerProcedimiento: ", data);
+
+    });
+};
+
+exports.ejecutarProcedimiento = function(rRequest, rResponse) {
+    logica.ejecutarProcedimiento(rRequest, function(data) {
+        rResponse.send(data);
+        rResponse.end();
+        console.log("DATA RESUELTA de ejecutarProcedimiento: ", data);
+
+    });
+};
+
+exports.obtenerParametros = function(rRequest, rResponse) {
+    logica.obtenerParametros(rRequest, function(data) {
+        rResponse.send(data);
+        rResponse.end();
+        console.log("DATA RESUELTA de obtenerParametros: ", data);
+
+    });
+};

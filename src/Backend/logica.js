@@ -131,3 +131,103 @@ exports.crearEsquema = function crearEsquema(data, callback) {
     })
 
 }
+
+exports.obtenerEsquemaTabla = function obtenerEsquemaTabla(data, callback) {
+    console.log(data.body);
+    proc_SQL.obtenerEsquemaTabla(data.body.db,data.body.nombreT, function(resultado) {
+        console.log("Rees de crearsqu  ", resultado);
+        if (resultado.success) {
+            callback({
+                succes: true,
+                data: resultado.data,
+                message: resultado.message,
+                msgCode: 200,
+            })
+
+        } else {
+            callback({
+                success: false,
+                data: resultado.message,
+                message: resultado.message,
+                msgCode: 400
+            })
+        }
+    })
+}
+
+exports.hacerProcedimiento = function hacerProcedimiento(data, callback) {
+    console.log(data.body);// se pide la bd, el tipo(insert,delete..),el nombre tabla, el esquema tabla y esquema procedimiento
+    proc_SQL.hacerProcedimiento(data.body.db,data.body.nombreEP,data.body.prefijo,data.body.tipo,data.body.nombreT,data.body.data, function(resultado) {
+        
+        // esto es para seguir el siguiente formato: EXECUTE genera_insertar 'GA','Personas2','test','autogeneracion'
+        console.log("Hacer Procedimiento  ", resultado);
+        if (resultado.success) {
+            callback({
+                succes: true,
+                data: resultado.data,
+                message: resultado.message,
+                msgCode: 200,
+            })
+
+        } else {
+            callback({
+                success: false,
+                data: resultado.message,
+                message: resultado.message,
+                msgCode: 400
+            })
+        }
+    })
+
+}
+
+exports.ejecutarProcedimiento = function ejecutarProcedimiento(data, callback) {
+    console.log(data.body);
+    // ademas de pedir los atributos para la ejecucion del procedimiento
+    proc_SQL.ejecutarProcedimiento(data.body.db,data.body.nombreEP,data.body.prefijo,data.body.tipo,data.body.nombreT,data.body.data, function(resultado) {
+        // y seguidamente hacer este: EXEC autogeneracion.GA_Insert_Personas2 207730941,'Marco','Esquivel','Vargas'
+        console.log("EjecutarProcedimiento  ", resultado);
+        if (resultado.success) {
+            callback({
+                succes: true,
+                data: resultado.data,
+                message: resultado.message,
+                msgCode: 200,
+            })
+
+        } else {
+            callback({
+                success: false,
+                data: resultado.message,
+                message: resultado.message,
+                msgCode: 400
+            })
+        }
+    })
+}
+
+exports.obtenerParametros = function obtenerParametros(data, callback) {
+    console.log(data.body);
+    // ademas de pedir los atributos para la ejecucion del procedimiento
+    proc_SQL.obtenerParametros(data.body.db,data.body.nombreT,data.body.nombreET, function(resultado) {
+        // y seguidamente hacer este: EXEC autogeneracion.GA_Insert_Personas2 207730941,'Marco','Esquivel','Vargas'
+        console.log("obtenerParametros  ", resultado);
+        if (resultado.success) {
+            callback({
+                succes: true,
+                data: resultado.data,
+                message: resultado.message,
+                msgCode: 200,
+            })
+
+        } else {
+            callback({
+                success: false,
+                data: resultado.message,
+                message: resultado.message,
+                msgCode: 400
+            })
+        }
+    })
+
+}

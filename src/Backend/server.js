@@ -23,6 +23,11 @@ app.put('/usarDB', ctrl.usarDB);
 app.put('/mostrarTablas', ctrl.mostrarTablas);
 app.put('/obtenerEsquemas', ctrl.obtenerEsquemas);
 app.put('/crearEsquema', ctrl.crearEsquema);
+app.put('/obtenerEsquemaTabla', ctrl.obtenerEsquemaTabla);
+app.put('/hacerProcedimiento', ctrl.hacerProcedimiento);
+app.put('/ejecutarProcedimiento', ctrl.ejecutarProcedimiento);
+app.put('/obtenerParametros', ctrl.obtenerParametros);
+
 
 
 

@@ -25,6 +25,9 @@ export class HomeComponent implements OnInit {
    tablaSeleccionada= 'NULL';
    esquemadb:any;  // guarad lista d eesqumeas de la bd actual
 
+   datos2:any;//para recibir los parametros en un lista
+
+   parametros:string;
 
    /// variables ngModel
    alias:string="";
@@ -32,15 +35,16 @@ export class HomeComponent implements OnInit {
    esquemaTabla:string;  // esquema q posee tabla
    esquemaProc:string="dbo";   // nuevo o ya existente
    metodoProc:string;
+  prefijo:string="GA";
+
+   pr:any;
 
   public genera(){
     var xd = document.getElementById("metodoSelect");
     this.metodoProc = xd.options[xd.selectedIndex].value;
     console.log(this.metodoProc);
-    this.crearEsquemas();
-
-
-
+    //this.crearEsquemas();
+    this.obtenerEsquemaTablas();
   }
 
 
@@ -105,6 +109,61 @@ export class HomeComponent implements OnInit {
 
   }
 
+  
+
+  public obtenerEsquemaTablas(){
+    let envia= {
+      db:this.DBActual,
+
+      nombreT:this.tablaSeleccionada
+    }
+    this.obtenerEsquemaTabla(envia);
+  }
+
+  public hacerProcedimientos(){
+    let envia= {
+      db:this.DBActual,
+      tipo:this.metodo,
+      prefijo:this.prefijo,
+      nombreT:this.tablaSeleccionada,
+      nombreET:this.esquemaTabla,
+      nombreEP:this.esquemaProc
+    }
+    this.hacerProcedimiento(envia);
+  }
+
+  public ejecutarProcedimientos(){
+    let envia= {
+      db:this.DBActual,
+      nombreEP:this.esquemaProc,
+      prefijo:this.prefijo,
+      tipo:this.metodo,
+      nombreT:this.tablaSeleccionada,
+      nombreET:this.esquemaTabla,
+      parametros:this.parametros
+    }
+
+    var l=this.datos2.length;
+
+    var i=0;
+
+    while (i< l){
+      this.parametros+=this.datos2[i];
+      console.log(this.datos2[i]);
+      i++;
+    }
+
+    this.ejecutarProcedimiento(envia);
+  }
+
+  public obtenerParametross(){
+    let envia= {
+      db:this.DBActual,
+      nombreT:this.tablaSeleccionada,
+      nombreET:this.esquemaTabla
+    }
+    this.obtenerParametros(envia);
+  }
 
 
 
@@ -191,5 +250,65 @@ export class HomeComponent implements OnInit {
   }
 
 
+  public obtenerEsquemaTabla(envia){
+    console.log("Entra a enviA desde obtenerEsquemaTabla, ",envia);
+    return this.http.put("http://localhost:3000/obtenerEsquemaTabla",envia)
+    .subscribe(
+      success => { 
+        this.pr= success;
+        console.log("sucessss. ",this.pr);
+      },
+      err => {
+       swal('Incorrecto...', "Error de conexion con endpoint /obtenerEsquemaTabla.", 'error');
+        console.log("Error ",err);
+      }
+    )
+  }
+  
+  public hacerProcedimiento(envia){
+    console.log("Entra a enviA desde hacerProcedimiento, ",envia);
+    return this.http.put("http://localhost:3000/hacerProcedimiento",envia)
+    .subscribe(
+      success => { 
+        this.pr= success;//agregar la variable para extraer los datos
+        console.log("sucessss. ",this.pr);
+      },
+      err => {
+       swal('Incorrecto...', "Error de conexion con endpoint /hacerProcedimiento.", 'error');
+        console.log("Error ",err);
+      }
+    )
+  }
+
+  public ejecutarProcedimiento(envia){
+    console.log("Entra a enviA desde hacerProcedimiento, ",envia);
+    return this.http.put("http://localhost:3000/hacerProcedimiento",envia)
+    .subscribe(
+      success => { 
+        this.pr= success;
+        console.log("sucessss. ",this.pr);
+      },
+      err => {
+       swal('Incorrecto...', "Error de conexion con endpoint /hacerProcedimiento.", 'error');
+        console.log("Error ",err);
+      }
+    )
+  }
+
+  public obtenerParametros(envia){
+    console.log("Entra a enviA desde obtenerParametros, ",envia);
+    return this.http.put("http://localhost:3000/obtenerParametros",envia)
+    .subscribe(
+      success => { 
+        this.datos2= success;//agregar la variable para extraer los datos
+        console.log("sucessss. ",this.datos2);
+      },
+      err => {
+       swal('Incorrecto...', "Error de conexion con endpoint /obtenerParametros.", 'error');
+        console.log("Error ",err);
+      }
+    )
+  }
 
 }
+

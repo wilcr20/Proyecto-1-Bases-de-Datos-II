@@ -14,6 +14,7 @@ create table personas
     apellido2   varchar(30)     NOT NULL
 )
 GO
+
 create SCHEMA test
 
 go
@@ -299,18 +300,23 @@ go
 execute autogeneracion.GA_Insert_Personas2 123456789,'Wilfred','Alvarado','Gay'
 go
 
-execute autogeneracion.GA_Delete_Personas2 207730941
-go
-
 execute autogeneracion.GA_Select_Personas2 207730941,null,null,null
 go
 
 execute autogeneracion.GA_Select_Personas2 null,'Marco2',null,null
 go
 
-select * from test.personas2
-
 execute autogeneracion.GA_Update_Personas2 207730941,207730941,'Marco2','Esquivel2','Vargas2'
 go
 
-select * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+execute autogeneracion.GA_Delete_Personas2 207730941
+go
+
+
+use ProyectoBasesII; select TABLE_SCHEMA from INFORMATION_SCHEMA.TABLES where TABLE_CATALOG= 'ProyectoBasesII' and Table_name= 'personas'
+use ProyectoBasesII go
+
+select distinct COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where table_schema='test' and table_name='personas2'
+
+
+select TABLE_SCHEMA as esq from INFORMATION_SCHEMA.TABLES where TABLE_CATALOG= 'ProyectoBasesII' and Table_name='personas2'
