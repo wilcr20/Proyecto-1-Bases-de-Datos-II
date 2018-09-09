@@ -29,22 +29,22 @@ export class HomeComponent implements OnInit {
 
    parametros:string;
 
-   /// variables ngModel
-   alias:string="";
+
+   /// variables ngModel para enviar
+   alias:string="GA";
    metodo:string="Insert";
    esquemaTabla:string;  // esquema q posee tabla
    esquemaProc:string="dbo";   // nuevo o ya existente
    metodoProc:string;
-  prefijo:string="GA";
+   prefijo:string="GA";
+   esquemaTablaAct:any; // esquema al que pertence la tabla seleccioanda
 
    pr:any;
 
   public genera(){
     var xd = document.getElementById("metodoSelect");
     this.metodoProc = xd.options[xd.selectedIndex].value;
-    console.log(this.metodoProc);
-    //this.crearEsquemas();
-    this.obtenerEsquemaTablas();
+    this.crearEsquemas();
   }
 
 
@@ -66,15 +66,18 @@ export class HomeComponent implements OnInit {
   }
 
   public mostrarTablas(){
+    this.tablaSeleccionada= 'NULL';
     let envia= {
       db:this.DBActual
     }
     this.mostrarTablasDB(envia);
+
   }
 
   public usarTabla(tabla:string){
     this.tablaSeleccionada= tabla;
     this.mostrarEsquema();
+    this.obtenerEsquemaTablas();
   }
 
   public mostrarEsquema(){
@@ -109,12 +112,11 @@ export class HomeComponent implements OnInit {
 
   }
 
-  
+
 
   public obtenerEsquemaTablas(){
     let envia= {
       db:this.DBActual,
-
       nombreT:this.tablaSeleccionada
     }
     this.obtenerEsquemaTabla(envia);
@@ -236,7 +238,6 @@ export class HomeComponent implements OnInit {
   }
 
   public crearEsquema(envia){
-    console.log("Entra a enviA desde crear esquema, ",envia);
     return this.http.put("http://localhost:3000/crearEsquema",envia)
     .subscribe(
       success => {
@@ -251,12 +252,11 @@ export class HomeComponent implements OnInit {
 
 
   public obtenerEsquemaTabla(envia){
-    console.log("Entra a enviA desde obtenerEsquemaTabla, ",envia);
     return this.http.put("http://localhost:3000/obtenerEsquemaTabla",envia)
     .subscribe(
-      success => { 
-        this.pr= success;
-        console.log("sucessss. ",this.pr);
+      success => {
+        this.esquemaTablaAct= JSON.stringify(success.data);
+        console.log("sucessss eswuma tabla. ",this.esquemaTablaAct);
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /obtenerEsquemaTabla.", 'error');
@@ -264,12 +264,12 @@ export class HomeComponent implements OnInit {
       }
     )
   }
-  
+
   public hacerProcedimiento(envia){
     console.log("Entra a enviA desde hacerProcedimiento, ",envia);
     return this.http.put("http://localhost:3000/hacerProcedimiento",envia)
     .subscribe(
-      success => { 
+      success => {
         this.pr= success;//agregar la variable para extraer los datos
         console.log("sucessss. ",this.pr);
       },
@@ -284,7 +284,7 @@ export class HomeComponent implements OnInit {
     console.log("Entra a enviA desde hacerProcedimiento, ",envia);
     return this.http.put("http://localhost:3000/hacerProcedimiento",envia)
     .subscribe(
-      success => { 
+      success => {
         this.pr= success;
         console.log("sucessss. ",this.pr);
       },
@@ -299,7 +299,7 @@ export class HomeComponent implements OnInit {
     console.log("Entra a enviA desde obtenerParametros, ",envia);
     return this.http.put("http://localhost:3000/obtenerParametros",envia)
     .subscribe(
-      success => { 
+      success => {
         this.datos2= success;//agregar la variable para extraer los datos
         console.log("sucessss. ",this.datos2);
       },

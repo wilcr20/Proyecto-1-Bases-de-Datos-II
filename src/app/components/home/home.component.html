@@ -24,8 +24,8 @@
     </div>
 </div>
 
-<div style="padding-top:2%;">
-    <div *ngIf="tablasDB?.length > 0" class="card-group">
+<div *ngIf="tablaSeleccionada == 'NULL'" style="padding-top:2%;">
+    <div *ngIf="tablasDB?.length > 0" class="card-columns">
         <div class="card" *ngFor="let t of tablasDB" style="width: 18rem;">
             <div class="card-body" style="color:rgb(10, 41, 97)">
                 <h5 class="card-title">Tabla {{t.TABLE_NAME}}</h5>
@@ -37,32 +37,45 @@
 </div>
 <br>
 <div *ngIf="tablaSeleccionada != 'NULL' " style="padding-top:2%; background-color:rgb(255, 255, 255)">
-    <form style="padding-top:6px; padding-bottom:15px;">
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="inputEmail4">Alias a utilizar </label>
-                <input type="text" [(ngModel)]="alias" name="alias" class="form-control" placeholder="GA">
-            </div>
+    <form style="padding-top:6px; padding-bottom:15px; padding-left:8px;">
 
-            <div class="form-group col-md-4">
-                <div class="form-group col-md-6">
-                    <label for="inputState">Esquemas disponibles en base de datos actual.</label>
-                    <select id="inputState" class="form-control">
-                      <option selected >-----------</option>
-                      <option *ngFor="let sch of esquemadb">{{sch.SCHEMA_NAME}}</option>
-                    </select>
-                </div>
-            </div>
+
+        <div class="form-row">
             <div class="form-group col-md-2">
-                <label for="inputCity">Esquema a usar para el procedimiento</label>
-                <input type="text" [(ngModel)]="esquemaProc" name="esquemaProc" class="form-control">
+                <label style="color:blue" for="inputEmail4">Alias a utilizar </label>
+                <input type="text" [(ngModel)]="alias" name="alias" class="form-control">
             </div>
 
         </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label style="color:blue" for="inputState">Esquemas disponibles en base de datos actual.</label>
+                <select id="inputState" class="form-control">
+                      <option selected >-----------</option>
+                      <option *ngFor="let sch of esquemadb">{{sch.SCHEMA_NAME}}</option>
+                    </select>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="padding-left:20%;padding-right:20%;">
+            <label for="exampleFormControlTextarea1">Example textarea</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label style="color:blue" for="inputCity">Esquema a usar para el procedimiento</label>
+                <input type="text" [(ngModel)]="esquemaProc" name="esquemaProc" class="form-control">
+            </div>
+        </div>
+
+
         <div class="form-row">
 
-            <div class="form-group col-md-4">
-                <label for="inputState">Método a utilizar</label>
+            <div class="form-group col-md-2">
+                <label style="color:blue" for="inputState">Método a utilizar</label>
                 <select id="metodoSelect" class="form-control">
               <option selected>Select</option>
               <option>Insert</option>
@@ -71,12 +84,19 @@
             </select>
             </div>
         </div>
-        <div>
+
+        <div class="form-group">
             <button type="submit" (click)="genera()" class="btn btn-primary">Generar procedimiento.</button>&nbsp;&nbsp;&nbsp;&nbsp;
             <button type="submit" class="btn btn-primary">Generar y ejecutar procedimiento.</button>
         </div>
 
     </form>
-    {{esquemaProc}} {{alias}}
+    <br><br> Datos a enviar
+    <br> Esquema de procedimeinto:{{esquemaProc}}
+    <br> Alias:{{alias}}
+    <br> Esquema de tabla actual: {{esquemaTablaAct}}
+    <br> Tabla: {{ tablaSeleccionada}}
+    <br>Metodo a utilizar: {{metodoProc}}
+    <br>
 
 </div>

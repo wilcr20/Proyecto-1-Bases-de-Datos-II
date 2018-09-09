@@ -18,8 +18,8 @@ export class IngresoComponent  {
 
 
    ipServer:string="localhost";
-   user:string ="marcoev3011";
-   pasw:string="1234";
+   user:string ="Wilfred";
+   pasw:string="123456789";
    public datos:any;
 
    public conect(){

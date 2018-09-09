@@ -9,7 +9,6 @@ var connection;
 ////////////////////////////////////////////////////////////// Funcion para realizar llamda usando un query string
 exports.executeRequest = function(request, callback) {
     'use strict';
-    console.log("Entra a executerequest");
     var res = [],
         connection = new Connection(config.config);
 
@@ -21,8 +20,6 @@ exports.executeRequest = function(request, callback) {
                 message: err.code
             });
             return;
-        } else {
-            console.log("SE CONECTA");
         }
         request.on('row', function(columns) {
             var row = {};

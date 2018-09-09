@@ -38,6 +38,7 @@ exports.obtenerEsquemas = function(rRequest, rResponse) {
     logica.obtenerEsquemas(rRequest, function(data) {
         rResponse.send(data);
         rResponse.end();
+        console.log("DATA RESUELTA de obtenerEsquemas: ", data);
 
     });
 };
@@ -46,7 +47,6 @@ exports.crearEsquema = function(rRequest, rResponse) {
     logica.crearEsquema(rRequest, function(data) {
         rResponse.send(data);
         rResponse.end();
-        console.log("DATA RESUELTA de crearEsquema: ", data);
 
     });
 };

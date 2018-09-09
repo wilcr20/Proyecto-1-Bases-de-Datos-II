@@ -109,9 +109,7 @@ exports.obtenerEsquemas = function obtenerEsquemas(data, callback) {
     })
 }
 exports.crearEsquema = function crearEsquema(data, callback) {
-    console.log("Body de crear esquema ", data.body);
     proc_SQL.crearEsquema(data.body.db, data.body.nombre, function(resultado) {
-        console.log("Rees de crearEsqeuma  ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,
@@ -133,9 +131,9 @@ exports.crearEsquema = function crearEsquema(data, callback) {
 }
 
 exports.obtenerEsquemaTabla = function obtenerEsquemaTabla(data, callback) {
-    console.log(data.body);
-    proc_SQL.obtenerEsquemaTabla(data.body.db,data.body.nombreT, function(resultado) {
-        console.log("Rees de crearsqu  ", resultado);
+    console.log("DESDE obteneresuqma ", data.body);
+    proc_SQL.obtenerEsquemaTabla(data.body.db, data.body.nombreT, function(resultado) {
+        console.log("Rees de obtenerEsq  ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,
@@ -156,9 +154,9 @@ exports.obtenerEsquemaTabla = function obtenerEsquemaTabla(data, callback) {
 }
 
 exports.hacerProcedimiento = function hacerProcedimiento(data, callback) {
-    console.log(data.body);// se pide la bd, el tipo(insert,delete..),el nombre tabla, el esquema tabla y esquema procedimiento
-    proc_SQL.hacerProcedimiento(data.body.db,data.body.nombreEP,data.body.prefijo,data.body.tipo,data.body.nombreT,data.body.data, function(resultado) {
-        
+    console.log(data.body); // se pide la bd, el tipo(insert,delete..),el nombre tabla, el esquema tabla y esquema procedimiento
+    proc_SQL.hacerProcedimiento(data.body.db, data.body.nombreEP, data.body.prefijo, data.body.tipo, data.body.nombreT, data.body.data, function(resultado) {
+
         // esto es para seguir el siguiente formato: EXECUTE genera_insertar 'GA','Personas2','test','autogeneracion'
         console.log("Hacer Procedimiento  ", resultado);
         if (resultado.success) {
@@ -184,7 +182,7 @@ exports.hacerProcedimiento = function hacerProcedimiento(data, callback) {
 exports.ejecutarProcedimiento = function ejecutarProcedimiento(data, callback) {
     console.log(data.body);
     // ademas de pedir los atributos para la ejecucion del procedimiento
-    proc_SQL.ejecutarProcedimiento(data.body.db,data.body.nombreEP,data.body.prefijo,data.body.tipo,data.body.nombreT,data.body.data, function(resultado) {
+    proc_SQL.ejecutarProcedimiento(data.body.db, data.body.nombreEP, data.body.prefijo, data.body.tipo, data.body.nombreT, data.body.data, function(resultado) {
         // y seguidamente hacer este: EXEC autogeneracion.GA_Insert_Personas2 207730941,'Marco','Esquivel','Vargas'
         console.log("EjecutarProcedimiento  ", resultado);
         if (resultado.success) {
@@ -209,7 +207,7 @@ exports.ejecutarProcedimiento = function ejecutarProcedimiento(data, callback) {
 exports.obtenerParametros = function obtenerParametros(data, callback) {
     console.log(data.body);
     // ademas de pedir los atributos para la ejecucion del procedimiento
-    proc_SQL.obtenerParametros(data.body.db,data.body.nombreT,data.body.nombreET, function(resultado) {
+    proc_SQL.obtenerParametros(data.body.db, data.body.nombreT, data.body.nombreET, function(resultado) {
         // y seguidamente hacer este: EXEC autogeneracion.GA_Insert_Personas2 207730941,'Marco','Esquivel','Vargas'
         console.log("obtenerParametros  ", resultado);
         if (resultado.success) {
