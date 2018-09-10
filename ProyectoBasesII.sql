@@ -1,38 +1,4 @@
-﻿use master
-go
-drop database ProyectoBasesII
-go
-create database ProyectoBasesII
-GO
-use ProyectoBasesII
-GO
-create table personas
-(
-    cedula      INT             primary key,
-    nombre      varchar(30)     NOT NULL,
-    apellido1   varchar(30)     NOT NULL,
-    apellido2   varchar(30)     NOT NULL
-)
-GO
-
-create SCHEMA test
-
-go
-create table test.personas2
-(
-    cedula      INT             primary key,
-    nombre      varchar(30)     NOT NULL,
-    apellido1   varchar(30)     NOT NULL,
-    apellido2   varchar(30)     NOT NULL
-)
-GO
-create view vista_personas
-as
-select * from personas
-go
-create view test.vista_personas2
-as
-select * from test.personas2
+﻿
 GO
 Create Procedure getPK(
 	@schema		varchar(30),
@@ -63,17 +29,17 @@ go
 
 
 
-select * from INFORMATION_SCHEMA.COLUMNS
 
-GO
---drop procedure  genera_insertar
---GO
+------------------------------------------------------INSERT
+
 CREATE PROCEDURE genera_insertar
 (
     @prefijo		VARCHAR (30),
     @nombre_tabla	VARCHAR (50),
     @esquema_t		VARCHAR (30),
-    @esquema_p		VARCHAR (30)
+    @esquema_p		VARCHAR (30),
+	@mensaje varchar(max) OUTPUT
+
 )
 AS
 DECLARE
@@ -122,16 +88,19 @@ BEGIN
     set @sql=@sql+@esquema_t+'.'+@nombre_tabla+@l_columnas+' values'+@l_parametros+'; END'
 
     EXECUTE sp_executesql @sql
-
-    PRINT @sql
+	set @mensaje = @sql
+	select @mensaje as query
 END
 
+
+------------------------------------------------------------- DELETE
 GO
-create procedure genera_delete(
+CREATE procedure genera_delete(
 	@prefijo		VARCHAR (30),
     @nombre_tabla	VARCHAR (50),
 	@esquema_t		VARCHAR	(30),
-    @esquema_p		VARCHAR (30)
+    @esquema_p		VARCHAR (30),
+	@mensaje varchar(max) OUTPUT
 )as
 DECLARE
     @sql		Nvarchar (2000),
@@ -150,19 +119,22 @@ begin
 				DELETE FROM '+ @esquema_t+'.'+@nombre_tabla+' where '+@pk_name+'=@pk;
 			END;'
 			EXECUTE sp_executesql @sql
-			print @sql
+			set @mensaje = @sql
+			select @mensaje as query
 		end
 	else
 		print 'La tabla '+@nombre_tabla+' a la que quiere crear el delete no existe en el esquema '+@esquema_t
 end;
-go
 
 
-create procedure genera_select (
+---------------------------------------------------------------- SELECT  ---------------------
+GO
+CREATE procedure genera_Select (
 	@prefijo		VARCHAR (30),
     @nombre_tabla	VARCHAR (50),
 	@esquema_t		VARCHAR	(30),
-    @esquema_p		VARCHAR (30)
+    @esquema_p		VARCHAR (30),
+	@mensaje varchar(max) OUTPUT
 )as
 DECLARE
     @sql			Nvarchar (2000),
@@ -215,21 +187,22 @@ begin
 			set @sql=@sql+@esquema_t+'.'+@nombre_tabla+@where+';
 			END'
 			EXECUTE sp_executesql @sql
-			print @sql
+			set @mensaje = @sql
+			select @mensaje as query
 		end
 	else
 		print 'La tabla '+@nombre_tabla+' a la que quiere crear el delete no existe en el esquema '+@esquema_t
 end
-go
 
+------------------------------------------------- UPDATE
 
-
-
-create procedure genera_update (
+Create procedure genera_update(
 	@prefijo		VARCHAR (30),
     @nombre_tabla	VARCHAR (50),
 	@esquema_t		VARCHAR	(30),
-    @esquema_p		VARCHAR (30)
+    @esquema_p		VARCHAR (30),
+	@mensaje varchar(max) OUTPUT
+
 )as
 DECLARE
     @sql			Nvarchar (2000),
@@ -284,22 +257,29 @@ begin
 			BEGIN
 				Update '
 			set @sql=@sql+@esquema_t+'.'+@nombre_tabla+@update+';
+
 			END'
 			EXECUTE sp_executesql @sql
-			print @sql
+			set @mensaje = @update
+			select @mensaje as query
 		end
 	else
 		print 'La tabla '+@nombre_tabla+' a la que quiere crear el delete no existe en el esquema '+@esquema_t
 end
-go
 
-create schema autogeneracion
-GO
+
+
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+
+
 
 EXECUTE genera_insertar 'GA','Personas2','test','autogeneracion'
 EXECUTE genera_delete 'GA','Personas2','test','autogeneracion'
 EXECUTE genera_select 'GA','Personas2','test','autogeneracion'
 EXECUTE genera_update 'GA','Personas2','test','autogeneracion'
+
+
 
 --correr hasta aqu� y despu�s ir linea por linea ejecutando las de abajo
 EXEC autogeneracion.GA_Insert_Personas2 207730941,'Marco','Esquivel','Vargas'
@@ -320,11 +300,3 @@ go
 execute autogeneracion.GA_Delete_Personas2 207730941
 go
 
-
-use ProyectoBasesII; select TABLE_SCHEMA from INFORMATION_SCHEMA.TABLES where TABLE_CATALOG= 'ProyectoBasesII' and Table_name= 'personas'
-use ProyectoBasesII go
-
-select distinct COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where table_schema='test' and table_name='personas2'
-
-
-select TABLE_SCHEMA as esq from INFORMATION_SCHEMA.TABLES where TABLE_CATALOG= 'ProyectoBasesII' and Table_name='personas2'

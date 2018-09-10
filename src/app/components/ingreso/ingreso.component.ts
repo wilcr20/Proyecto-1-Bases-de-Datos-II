@@ -22,6 +22,10 @@ export class IngresoComponent  {
    pasw:string="123456789";
    public datos:any;
 
+   public a (){
+     console.log("aaa");
+   }
+
    public conect(){
 
     let json ={

@@ -15,12 +15,14 @@ import {Router} from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
+
   constructor( private http: HttpClient) {
    }
 
    datos:any;
    DBActual:string ="NULL";  // variable usada para moverse entre bases de datos y obtener tablas
    dbSeleccionada:boolean= false;
+   procediListo:boolean= false;
    tablasDB:any;
    tablaSeleccionada= 'NULL';
    esquemadb:any;  // guarad lista d eesqumeas de la bd actual
@@ -40,8 +42,10 @@ export class HomeComponent implements OnInit {
    queryGenerado:string= "Select * from ...";
 
    parametrosTabla:any;
+   parametrosAEnviar:string;
 
    pr:any;
+   prr:any;
 
   public genera(){
     var xd = document.getElementById("metodoSelect");
@@ -49,19 +53,64 @@ export class HomeComponent implements OnInit {
     this.crearEsquemas();
   }
 
-  public ejecutar(){
+
+/////////////////////////////////////  metodos de ejecucion de procediemientos
+
+
+  public  ejecutarInsert(){
     console.log("Obtner parametros");
     this.obtenerParametross();
   }
 
 
+
+  public insertar(){
+    this.parametrosAEnviar="";
+    console.log("Inserta xd");
+    var tamaParms = this.parametrosTabla.length;
+
+    this.parametrosAEnviar= " '"+document.getElementById("insert0").value+ "'" ;
+
+    var n=1;
+
+    while( n < tamaParms){
+      this.parametrosAEnviar = this.parametrosAEnviar + " , '" + document.getElementById("insert"+n).value+ "' ";
+      n++;
+    }
+    console.log("parmas :V  ", this.parametrosAEnviar);
+
+
+    var eT= this.esquemaTablaAct[0].TABLE_SCHEMA;
+    let envia= {
+      db:this.DBActual,
+      nombreEP:this.esquemaProc,
+      prefijo:this.alias,
+      tipo:'Insert',
+      nombreT:this.tablaSeleccionada,
+      nombreET:eT,
+      parametros:this.parametrosAEnviar
+    }
+
+    this.ejecutarProcedimiento(envia);
+  }
+
+
+
+
+
+
+
+//////////////////////////////////////////////
+
   ngOnInit() {
+    this.procediListo= false;
     this.dbSeleccionada= false;
     this.obtenerDB(); // al inicar componente trae las bases de datos que posee
   }
 
 
   public cambioDb(db){
+    this.procediListo= false;
     this.tablaSeleccionada='NULL';
     this.tablasDB= [];
     this.DBActual= db.name;
@@ -72,6 +121,7 @@ export class HomeComponent implements OnInit {
   }
 
   public mostrarTablas(){
+    this.procediListo= false;
     this.tablaSeleccionada= 'NULL';
     let envia= {
       db:this.DBActual
@@ -81,12 +131,15 @@ export class HomeComponent implements OnInit {
   }
 
   public usarTabla(tabla:string){
+    this.procediListo= false;
+    this.queryGenerado="Select * from ...";
     this.tablaSeleccionada= tabla;
     this.mostrarEsquema();
     this.obtenerEsquemaTablas();
   }
 
   public mostrarEsquema(){
+    this.procediListo= false;
     let envia= {
       db:this.DBActual
     }
@@ -94,6 +147,7 @@ export class HomeComponent implements OnInit {
   }
 
   public crearEsquemas(){
+    this.procediListo= false;
     let envia= {
       db:this.DBActual,
       nombre:this.esquemaProc
@@ -122,6 +176,7 @@ export class HomeComponent implements OnInit {
 
 
   public obtenerEsquemaTablas(){
+    this.procediListo= false;
     let envia= {
       db:this.DBActual,
       nombreT:this.tablaSeleccionada
@@ -130,7 +185,7 @@ export class HomeComponent implements OnInit {
   }
 
   public hacerProcedimientos(){
-
+    this.procediListo= false;
     var eT= this.esquemaTablaAct[0].TABLE_SCHEMA;
 
     let envia= {
@@ -177,7 +232,6 @@ export class HomeComponent implements OnInit {
 
   public obtenerParametross(){
     var eT= this.esquemaTablaAct[0].TABLE_SCHEMA;
-
     let envia= {
       db:this.DBActual,
       nombreT:this.tablaSeleccionada,
@@ -291,6 +345,8 @@ export class HomeComponent implements OnInit {
       success => {
         this.queryGenerado= success.data;
         console.log("sucessss query generado. ",this.queryGenerado);
+        swal('Correcto', "Procedimiento generado y creado en base de dato correctamente.", 'info');
+        this.procediListo=true;
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /hacerProcedimiento.", 'error');
@@ -302,17 +358,20 @@ export class HomeComponent implements OnInit {
 
   public ejecutarProcedimiento(envia){
     console.log("Entra a enviA desde ejecutarProcedimiento, ",envia);
+
     return this.http.put("http://localhost:3000/ejecutarProcedimiento",envia)
     .subscribe(
       success => {
-        this.pr= success;
-        console.log("sucessss. ",this.pr);
+        this.prr= success;
+        console.log("sucessssde ejecutar prc " ,this.prr);
+        swal('Correcto...', "Datos insertados correctamnete.", 'info');
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /ejecutarProcedimiento.", 'error');
         console.log("Error ",err);
       }
     )
+
   }
 
   public obtenerParametros(envia){
@@ -323,6 +382,7 @@ export class HomeComponent implements OnInit {
       success => {
         this.parametrosTabla= success.data;//agregar la variable para extraer los datos
         console.log("sucessss de obtener param. ",this.parametrosTabla);
+
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /obtenerParametros.", 'error');

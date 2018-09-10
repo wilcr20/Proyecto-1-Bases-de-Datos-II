@@ -36,6 +36,33 @@
     </div>
 </div>
 <br>
+
+<div class="modal fade special-card" id="insertaModal" tabindex="-1" role="dialog" aria-labelledby="insertaModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="insertaModal">Ingrese los datos solicitados</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" *ngFor="let p of parametrosTabla; let i=index;">
+                        <label class="col-form-label">{{p.COLUMN_NAME}}</label>
+                        <input type="text" id="insert{{i}}" placeholder="insert{{i}}" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closemodal" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" (click)="insertar()" class="btn btn-success">Insertar datos</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div *ngIf="tablaSeleccionada != 'NULL' " style="padding-top:2%; background-color:rgb(255, 255, 255)">
     <form style="padding-top:6px; padding-bottom:15px; padding-left:8px;">
 
@@ -67,11 +94,6 @@
             </div>
         </div>
 
-        <DIV>
-            <label *ngFor="let p of parametrosTabla; let i=index;">{{p.COLUMN_NAME}}</label>
-            <input type="text" placeholder="Ingrese dato a envias">
-        </DIV>
-
 
         <div class="form-group" style="padding-left:12px; padding-top:2%;padding-right:70%;">
             <hr>
@@ -86,17 +108,13 @@
             <div class="form-group col-md-2" style="padding-left:20px;">
                 <button type="submit" (click)="genera()" class="btn btn-primary">Generar procedimiento.</button>
                 <br><br>
-                <button type="submit" (click)="ejecutar()" class="btn btn-primary">Ejecutar procedimiento generado.</button>
+                <button *ngIf="procediListo" type="submit" data-toggle="modal" data-target="#insertaModal" (click)="ejecutarInsert()" class="btn btn-primary">Ejecutar procedimiento Insertar.</button>
             </div>
         </div>
 
     </form>
-    <br><br> Datos a enviar
-    <br> Esquema de procedimeinto:{{esquemaProc}}
-    <br> Alias:{{alias}}
-    <br> Esquema de tabla actual: {{esquemaTablaAct}}
-    <br> Tabla: {{ tablaSeleccionada}}
-    <br>Metodo a utilizar: {{metodoProc}}
+    <br>
+    <br>
     <br>
 
 </div>

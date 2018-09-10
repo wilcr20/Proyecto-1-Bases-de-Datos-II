@@ -178,10 +178,9 @@ exports.hacerProcedimiento = function hacerProcedimiento(data, callback) {
 
 
 exports.ejecutarProcedimiento = function ejecutarProcedimiento(data, callback) {
-    console.log(data.body);
     // ademas de pedir los atributos para la ejecucion del procedimiento
-    proc_SQL.ejecutarProcedimiento(data.body.db, data.body.nombreEP, data.body.prefijo, data.body.tipo, data.body.nombreT, data.body.data, function(resultado) {
-        // y seguidamente hacer este: EXEC autogeneracion.GA_Insert_Personas2 207730941,'Marco','Esquivel','Vargas'
+    console.log("BODY desde ejecutarProc", data.body);
+    proc_SQL.ejecutarProcedimiento(data.body.db, data.body.nombreEP, data.body.prefijo, data.body.tipo, data.body.nombreT, data.body.parametros, function(resultado) {
         console.log("EjecutarProcedimiento  ", resultado);
         if (resultado.success) {
             callback({
@@ -203,11 +202,10 @@ exports.ejecutarProcedimiento = function ejecutarProcedimiento(data, callback) {
 }
 
 exports.obtenerParametros = function obtenerParametros(data, callback) {
-    console.log("BODY DE OBT PARA ", data.body);
     // ademas de pedir los atributos para la ejecucion del procedimiento
     proc_SQL.obtenerParametros(data.body.db, data.body.nombreT, data.body.nombreET, function(resultado) {
         // y seguidamente hacer este: EXEC autogeneracion.GA_Insert_Personas2 207730941,'Marco','Esquivel','Vargas'
-        console.log("obtenerParametros  ", resultado);
+        console.log("obtenerParametros resultado: ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,
