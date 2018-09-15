@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
    procediListo:boolean= false;
    tablasDB:any;
    tablaSeleccionada= 'NULL';
-   esquemadb:any;  // guarad lista d eesqumeas de la bd actual
+   esquemadb:any;  // guarad lista de esqumeas de la bd actual
 
    datos2:any;//para recibir los parametros en un lista
 
@@ -35,17 +35,27 @@ export class HomeComponent implements OnInit {
    /// variables ngModel para enviar
    alias:string="GA";
    metodo:string="Insert";
-   esquemaTabla:any="xd";  // esquema q posee tabla
+   esquemaTabla:any="";  // esquema q posee tabla
    esquemaProc:string="dbo";   // nuevo o ya existente
    metodoProc:string;
    esquemaTablaAct:any; // esquema al que pertence la tabla seleccioanda
-   queryGenerado:string= "Select * from ...";
+   queryGenerado:any= "Select * from ...";
 
    parametrosTabla:any;
-   parametrosAEnviar:string;
+   parametrosAEnviar:any;
 
    pr:any;
    prr:any;
+   keysTabla:any;
+
+
+      //// Para saber que boton de ejecutar mostrar xd
+  procediInsert=false;
+  procediSelect=false;
+  procediUpdate=false;
+  procediDelete=false;
+
+
 
   public genera(){
     var xd = document.getElementById("metodoSelect");
@@ -56,17 +66,27 @@ export class HomeComponent implements OnInit {
 
 /////////////////////////////////////  metodos de ejecucion de procediemientos
 
-
   public  ejecutarInsert(){
-    console.log("Obtner parametros");
+    console.log("insertar");
     this.obtenerParametross();
   }
 
+  public ejecutarSelect(){
+    console.log("select");
+    this.obtenerParametross();
+  }
+  public ejecutarDelete(){
+    console.log("delete");
+    this.obtenerPk();
+
+  }
+  public ejecutarUpdate(){
+    console.log("update");
+  }
 
 
   public insertar(){
     this.parametrosAEnviar="";
-    console.log("Inserta xd");
     var tamaParms = this.parametrosTabla.length;
 
     this.parametrosAEnviar= " '"+document.getElementById("insert0").value+ "'" ;
@@ -80,7 +100,7 @@ export class HomeComponent implements OnInit {
     console.log("parmas :V  ", this.parametrosAEnviar);
 
 
-    var eT= this.esquemaTablaAct[0].TABLE_SCHEMA;
+    var eT= this.esquemaTablaAct.data[0].TABLE_SCHEMA;
     let envia= {
       db:this.DBActual,
       nombreEP:this.esquemaProc,
@@ -95,6 +115,88 @@ export class HomeComponent implements OnInit {
   }
 
 
+  public select(){
+    this.parametrosAEnviar="";
+    var tamaParms = this.parametrosTabla.length;
+
+    if (document.getElementById("insert0").value == ""){
+    this.parametrosAEnviar="NULL";
+    }
+    else{
+      this.parametrosAEnviar= " '"+document.getElementById("insert0").value+ "'" ;
+    }
+
+
+    var n=1;
+
+    while( n < tamaParms){
+      if (document.getElementById("insert"+n).value == ""){
+        this.parametrosAEnviar = this.parametrosAEnviar + ", NULL ";
+      }else{
+        this.parametrosAEnviar = this.parametrosAEnviar + " , '" + document.getElementById("insert"+n).value+ "' ";
+      }
+
+      n++;
+    }
+    console.log();
+    console.log("parmas :V desde select  ", this.parametrosAEnviar);
+    console.log();
+
+    var eT= this.esquemaTablaAct.data[0].TABLE_SCHEMA;
+    let enviaS= {
+      db:this.DBActual,
+      nombreEP:this.esquemaProc,
+      prefijo:this.alias,
+      tipo:'Select',
+      nombreT:this.tablaSeleccionada,
+      nombreET:eT,
+      parametros:this.parametrosAEnviar
+    }
+    this.ejecutarProcedimiento(enviaS);
+  }
+
+
+  ////////////
+  public delete (){            // unicamente una llave primaria por tabla
+    this.parametrosAEnviar="";
+    var tamaParms = this.parametrosTabla.length;
+
+    if (document.getElementById("insert0").value == ""){
+    this.parametrosAEnviar="NULL";
+    }
+    else{
+      this.parametrosAEnviar= " '"+document.getElementById("insert0").value+ "'" ;
+    }
+
+    console.log();
+    console.log("parmas :V desde delete  ", this.parametrosAEnviar);
+    console.log();
+
+    var eT= this.esquemaTablaAct.data[0].TABLE_SCHEMA;
+    let enviaS= {
+      db:this.DBActual,
+      nombreEP:this.esquemaProc,
+      prefijo:this.alias,
+      tipo:'Delete',
+      nombreT:this.tablaSeleccionada,
+      nombreET:eT,
+      parametros:this.parametrosAEnviar
+    }
+    this.ejecutarProcedimiento(enviaS);
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -104,13 +206,22 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.procediListo= false;
+    this.procediInsert=false;
+    this.procediSelect=false;
+    this.procediUpdate=false;
+    this.procediDelete=false;
     this.dbSeleccionada= false;
+    this.tablaSeleccionada='NULL';
     this.obtenerDB(); // al inicar componente trae las bases de datos que posee
   }
 
 
   public cambioDb(db){
     this.procediListo= false;
+    this.procediInsert=false;
+    this.procediSelect=false;
+    this.procediUpdate=false;
+    this.procediDelete=false;
     this.tablaSeleccionada='NULL';
     this.tablasDB= [];
     this.DBActual= db.name;
@@ -122,6 +233,10 @@ export class HomeComponent implements OnInit {
 
   public mostrarTablas(){
     this.procediListo= false;
+    this.procediInsert=false;
+    this.procediSelect=false;
+    this.procediUpdate=false;
+    this.procediDelete=false;
     this.tablaSeleccionada= 'NULL';
     let envia= {
       db:this.DBActual
@@ -132,6 +247,10 @@ export class HomeComponent implements OnInit {
 
   public usarTabla(tabla:string){
     this.procediListo= false;
+    this.procediInsert=false;
+    this.procediSelect=false;
+    this.procediUpdate=false;
+    this.procediDelete=false;
     this.queryGenerado="Select * from ...";
     this.tablaSeleccionada= tabla;
     this.mostrarEsquema();
@@ -140,6 +259,10 @@ export class HomeComponent implements OnInit {
 
   public mostrarEsquema(){
     this.procediListo= false;
+    this.procediInsert=false;
+    this.procediSelect=false;
+    this.procediUpdate=false;
+    this.procediDelete=false;
     let envia= {
       db:this.DBActual
     }
@@ -148,16 +271,20 @@ export class HomeComponent implements OnInit {
 
   public crearEsquemas(){
     this.procediListo= false;
+    this.procediInsert=false;
+    this.procediSelect=false;
+    this.procediUpdate=false;
+    this.procediDelete=false;
     let envia= {
       db:this.DBActual,
       nombre:this.esquemaProc
     }
-    var l=this.esquemadb.length;
+    var l=this.esquemadb.data.length;
 
     var i=0;
 
     while (i< l){
-      if(this.esquemadb[i].SCHEMA_NAME == this.esquemaProc){
+      if(this.esquemadb.data[i].SCHEMA_NAME == this.esquemaProc){
         console.log("Iguales.... ", this.esquemaProc);
         this.hacerProcedimientos(); // se hace procedimiernto con esquema ya en db
         break;
@@ -177,6 +304,10 @@ export class HomeComponent implements OnInit {
 
   public obtenerEsquemaTablas(){
     this.procediListo= false;
+    this.procediInsert=false;
+    this.procediSelect=false;
+    this.procediUpdate=false;
+    this.procediDelete=false;
     let envia= {
       db:this.DBActual,
       nombreT:this.tablaSeleccionada
@@ -186,7 +317,11 @@ export class HomeComponent implements OnInit {
 
   public hacerProcedimientos(){
     this.procediListo= false;
-    var eT= this.esquemaTablaAct[0].TABLE_SCHEMA;
+    this.procediInsert=false;
+    this.procediSelect=false;
+    this.procediUpdate=false;
+    this.procediDelete=false;
+    var eT= this.esquemaTablaAct.data[0].TABLE_SCHEMA;
 
     let envia= {
       db:this.DBActual,
@@ -199,39 +334,18 @@ export class HomeComponent implements OnInit {
     this.hacerProcedimiento(envia);
     setTimeout(() => {
 
-      var xd = this.queryGenerado[0];
+      var xd = this.queryGenerado.data[0];
       var que=xd.query
       console.log("procc xd", que);
       this.queryGenerado=que;
     }, 2000);
   }
 
-  public ejecutarProcedimientos(){
-    let envia= {
-      db:this.DBActual,
-      nombreEP:this.esquemaProc,
-      prefijo:this.prefijo,
-      tipo:this.metodo,
-      nombreT:this.tablaSeleccionada,
-      nombreET:this.esquemaTabla,
-      parametros:this.parametros
-    }
 
-    var l=this.datos2.length;
 
-    var i=0;
-
-    while (i< l){
-      this.parametros+=this.datos2[i];
-      console.log(this.datos2[i]);
-      i++;
-    }
-
-    this.ejecutarProcedimiento(envia);
-  }
 
   public obtenerParametross(){
-    var eT= this.esquemaTablaAct[0].TABLE_SCHEMA;
+    var eT= this.esquemaTablaAct.data[0].TABLE_SCHEMA;
     let envia= {
       db:this.DBActual,
       nombreT:this.tablaSeleccionada,
@@ -239,6 +353,33 @@ export class HomeComponent implements OnInit {
     }
     this.obtenerParametros(envia);
   }
+
+  public obtenerPk(){
+    var eT= this.esquemaTablaAct.data[0].TABLE_SCHEMA;
+    let envia= {
+      db:this.DBActual,
+      nombreT:this.tablaSeleccionada,
+      nombreET:eT
+    }
+    this.obtenerPks(envia);
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -251,7 +392,7 @@ export class HomeComponent implements OnInit {
     return this.http.get("http://localhost:3000/obtenerDB")
     .subscribe(
       success => {
-        this.datos = success.data;
+        this.datos = success;
         console.log("datos: ", this.datos);
       },
       err => {
@@ -284,7 +425,7 @@ export class HomeComponent implements OnInit {
     return this.http.put("http://localhost:3000/mostrarTablas",envia)
     .subscribe(
       success => {
-        this.tablasDB= success.data;
+        this.tablasDB= success;
         console.log("datos: ", this.tablasDB);
 
       },
@@ -300,7 +441,7 @@ export class HomeComponent implements OnInit {
     return this.http.put("http://localhost:3000/obtenerEsquemas",envia)
     .subscribe(
       success => {
-        this.esquemadb= success.data;
+        this.esquemadb= success;
 
       },
       err => {
@@ -328,7 +469,7 @@ export class HomeComponent implements OnInit {
     return this.http.put("http://localhost:3000/obtenerEsquemaTabla",envia)
     .subscribe(
       success => {
-        this.esquemaTablaAct= success.data;
+        this.esquemaTablaAct= success;
         console.log("sucessss esuqma tabla. ",this.esquemaTablaAct);
       },
       err => {
@@ -343,10 +484,36 @@ export class HomeComponent implements OnInit {
     return this.http.put("http://localhost:3000/hacerProcedimiento",envia)
     .subscribe(
       success => {
-        this.queryGenerado= success.data;
+        this.queryGenerado = success;
         console.log("sucessss query generado. ",this.queryGenerado);
         swal('Correcto', "Procedimiento generado y creado en base de dato correctamente.", 'info');
         this.procediListo=true;
+        console.log("--------------------" ,this.metodoProc);
+        //
+        if(this.metodoProc == 'Insertar'){
+          this.procediInsert=true;
+          this.procediDelete=false;
+          this.procediSelect=false;
+          this.procediUpdate=false;
+        }
+        if(this.metodoProc == 'Select'){
+          this.procediInsert=false;
+          this.procediDelete=false;
+          this.procediSelect=true;
+          this.procediUpdate=false;
+        }
+        if(this.metodoProc == 'Delete'){
+          this.procediInsert=false;
+          this.procediDelete=true;
+          this.procediSelect=false;
+          this.procediUpdate=false;
+        }
+        if(this.metodoProc == 'Update'){
+          this.procediInsert=false;
+          this.procediDelete=false;
+          this.procediSelect=false;
+          this.procediUpdate=true;
+        }
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /hacerProcedimiento.", 'error');
@@ -357,14 +524,26 @@ export class HomeComponent implements OnInit {
   }
 
   public ejecutarProcedimiento(envia){
+
     console.log("Entra a enviA desde ejecutarProcedimiento, ",envia);
 
     return this.http.put("http://localhost:3000/ejecutarProcedimiento",envia)
     .subscribe(
       success => {
         this.prr= success;
-        console.log("sucessssde ejecutar prc " ,this.prr);
-        swal('Correcto...', "Datos insertados correctamnete.", 'info');
+        console.log("Success de jecutar proc:  " ,this.prr);
+
+        if(this.metodoProc == 'Select'){
+          swal('Correcto...', "Datos obtenidos:  " + JSON.stringify(this.prr.data)  , 'info');
+        }
+        if (this.metodoProc == 'Insert'){
+          swal('Correcto...', "Inserción ejecutada Correctamnete. ", 'info');
+        }
+        if (this.metodoProc == 'Delete'){
+          swal('Correcto...', "Eliminado Correctamnete. ", 'info');
+        }
+
+
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /ejecutarProcedimiento.", 'error');
@@ -382,7 +561,6 @@ export class HomeComponent implements OnInit {
       success => {
         this.parametrosTabla= success.data;//agregar la variable para extraer los datos
         console.log("sucessss de obtener param. ",this.parametrosTabla);
-
       },
       err => {
        swal('Incorrecto...', "Error de conexion con endpoint /obtenerParametros.", 'error');
@@ -391,6 +569,27 @@ export class HomeComponent implements OnInit {
     )
 
   }
+
+
+  public obtenerPks(envia){
+    console.log("Entra a enviA desde obtenerPks, ",envia);
+
+    return this.http.put("http://localhost:3000/obtenerPrimaryKey",envia)
+    .subscribe(
+      success => {
+        this.parametrosTabla= success.data;//agregar la variable para extraer los datos
+        console.log("sucessss de obtener pks. ",this.parametrosTabla);
+      },
+      err => {
+       swal('Incorrecto...', "Error de conexion con endpoint /obtenerPks.", 'error');
+        console.log("Error ",err);
+      }
+    )
+
+  }
+
+
+
 
 }
 

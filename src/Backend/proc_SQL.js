@@ -129,9 +129,9 @@ exports.hacerProcedimiento = function hacerProcedimiento(db, tipo, prefijo, nomb
 }
 
 exports.ejecutarProcedimiento = function ejecutarProcedimiento(db, nombreEP, prefijo, tipo, nombreT, parametros, callback) {
-    console.log("use " + db + ";EXEC " + nombreEP + "." + prefijo + "_" + tipo + "_" + nombreT + ' ' + parametros + ";");
+    console.log("use " + db + ";EXEC " + nombreEP + "." + prefijo + "_" + tipo + "_" + nombreT + " " + parametros + ";");
 
-    var request = new Request("use " + db + ";EXEC " + nombreEP + "." + prefijo + "_" + tipo + "_" + nombreT + parametros + ";", function(err) {
+    var request = new Request("use " + db + ";EXEC " + nombreEP + "." + prefijo + "_" + tipo + "_" + nombreT + " " + parametros + ";", function(err) {
         if (err) {
             callback({
                 success: false,
@@ -148,8 +148,25 @@ exports.ejecutarProcedimiento = function ejecutarProcedimiento(db, nombreEP, pre
 }
 
 exports.obtenerParametros = function obtenerParametros(db, nombreET, nombreT, callback) {
-    console.log("use " + db + "; select  COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_CATALOG= '" + db + "' and table_schema= '" + nombreT + "' and table_name= '" + nombreET + "' ;");
     var request = new Request("use " + db + ";select  COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_CATALOG= '" + db + "' and table_schema= '" + nombreT + "' and table_name= '" + nombreET + "' ;", function(err) {
+        if (err) {
+            callback({
+                success: false,
+                data: err,
+                error: request.error,
+                title: 'Error',
+                message: 'Error al obtener información',
+                type: 'error'
+            });
+        }
+    });
+    //console.log("callback: ", callback);
+    call_SQL.executeRequest(request, callback)
+}
+
+
+exports.obtenerPrimaryKey = function obtenerPrimaryKey(db, nombreT, nombreET, callback) {
+    var request = new Request("use " + db + ";select COLUMN_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS Tab join INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE Col on Col.Constraint_Name = Tab.Constraint_Name and Col.Table_Name = Tab.Table_Name where Constraint_Type = 'PRIMARY KEY ' and col.TABLE_NAME = '" + nombreT + "'  and  col.TABLE_SCHEMA ='" + nombreET + "' ;", function(err) {
         if (err) {
             callback({
                 success: false,

@@ -11,7 +11,7 @@ exports.conectarServer = function conectarServer(data, callback) {
         server: data.body.server,
         options: {
             // database: data.body.proyecto,
-            driver: 'SQL Server Native Client 11.0',
+            //driver: 'SQL Server Native Client 11.0',
             rowCollectionOnDone: true
         }
     };
@@ -154,7 +154,6 @@ exports.obtenerEsquemaTabla = function obtenerEsquemaTabla(data, callback) {
 exports.hacerProcedimiento = function hacerProcedimiento(data, callback) {
     // se pide la bd, el tipo(insert,delete..),el nombre tabla, el esquema tabla y esquema procedimiento
     proc_SQL.hacerProcedimiento(data.body.db, data.body.tipo, data.body.prefijo, data.body.nombreT, data.body.nombreET, data.body.nombreEP, function(resultado) {
-        console.log("RESULTA HACER PROC: ", resultado);
         // esto es para seguir el siguiente formato: EXECUTE genera_insertar 'GA','Personas2','test','autogeneracion'
         if (resultado.success) {
             callback({
@@ -179,9 +178,10 @@ exports.hacerProcedimiento = function hacerProcedimiento(data, callback) {
 
 exports.ejecutarProcedimiento = function ejecutarProcedimiento(data, callback) {
     // ademas de pedir los atributos para la ejecucion del procedimiento
-    console.log("BODY desde ejecutarProc", data.body);
+    console.log();
+    console.log();
+    console.log("BODY desde ejecutarProc---- ", data.body);
     proc_SQL.ejecutarProcedimiento(data.body.db, data.body.nombreEP, data.body.prefijo, data.body.tipo, data.body.nombreT, data.body.parametros, function(resultado) {
-        console.log("EjecutarProcedimiento  ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,
@@ -205,7 +205,29 @@ exports.obtenerParametros = function obtenerParametros(data, callback) {
     // ademas de pedir los atributos para la ejecucion del procedimiento
     proc_SQL.obtenerParametros(data.body.db, data.body.nombreT, data.body.nombreET, function(resultado) {
         // y seguidamente hacer este: EXEC autogeneracion.GA_Insert_Personas2 207730941,'Marco','Esquivel','Vargas'
-        console.log("obtenerParametros resultado: ", resultado);
+        if (resultado.success) {
+            callback({
+                succes: true,
+                data: resultado.data,
+                message: resultado.message,
+                msgCode: 200,
+            })
+
+        } else {
+            callback({
+                success: false,
+                data: resultado.message,
+                message: resultado.message,
+                msgCode: 400
+            })
+        }
+    })
+
+}
+
+exports.obtenerPrimaryKey = function obtenerPrimaryKey(data, callback) {
+    proc_SQL.obtenerPrimaryKey(data.body.db, data.body.nombreT, data.body.nombreET, function(resultado) {
+        console.log("obtenerPrimaryKey resultado: ", resultado);
         if (resultado.success) {
             callback({
                 succes: true,

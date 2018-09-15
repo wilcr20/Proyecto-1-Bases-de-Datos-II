@@ -7,7 +7,7 @@
         <li class="dropdown">
             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Seleccionar base de Dato a utilizar <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
-                <li (click)="cambioDb(d)" *ngFor="let d of datos">{{d.name}}</li>
+                <li (click)="cambioDb(d)" *ngFor="let d of datos.data">{{d.name}}</li>
             </ul>
         </li>
     </ul>
@@ -25,8 +25,8 @@
 </div>
 
 <div *ngIf="tablaSeleccionada == 'NULL'" style="padding-top:2%;">
-    <div *ngIf="tablasDB?.length > 0" class="card-columns">
-        <div class="card" *ngFor="let t of tablasDB" style="width: 18rem;">
+    <div *ngIf="tablasDB.data?.length > 0" class="card-columns">
+        <div class="card" *ngFor="let t of tablasDB.data" style="width: 18rem;">
             <div class="card-body" style="color:rgb(10, 41, 97)">
                 <h5 class="card-title">Tabla {{t.TABLE_NAME}}</h5>
                 <hr>
@@ -37,11 +37,11 @@
 </div>
 <br>
 
-<div class="modal fade special-card" id="insertaModal" tabindex="-1" role="dialog" aria-labelledby="insertaModal" aria-hidden="true">
+<div class="modal fade special-card" id="ejecutaModal" tabindex="-1" role="dialog" aria-labelledby="ejecutaModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="insertaModal">Ingrese los datos solicitados</h5>
+                <h5 class="modal-title" id="ejecutaModal">Ingrese los datos solicitados</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -50,13 +50,15 @@
                 <form>
                     <div class="form-group" *ngFor="let p of parametrosTabla; let i=index;">
                         <label class="col-form-label">{{p.COLUMN_NAME}}</label>
-                        <input type="text" id="insert{{i}}" placeholder="insert{{i}}" class="form-control" required>
+                        <input type="text" id="insert{{i}}" placeholder="NULL" class="form-control">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" id="closemodal" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" (click)="insertar()" class="btn btn-success">Insertar datos</button>
+                <button *ngIf="procediInsert" type="button" (click)="insertar()" class="btn btn-success">Insertar Datos.</button>
+                <button *ngIf="procediSelect" type="button" (click)="select()" class="btn btn-success">Seleccionar Datos.</button>
+                <button *ngIf="procediDelete" type="button" (click)="delete()" class="btn btn-success">Borrar Datos.</button>
             </div>
         </div>
     </div>
@@ -76,7 +78,7 @@
                 <label style="color:blue" for="inputState">Esquemas disponibles.</label>
                 <select id="inputState" class="form-control">
                       <option selected >-----------</option>
-                      <option *ngFor="let sch of esquemadb">{{sch.SCHEMA_NAME}}</option>
+                      <option *ngFor="let sch of esquemadb.data">{{sch.SCHEMA_NAME}}</option>
                     </select>
             </div>
             <div class="form-group col-md-2" style="padding-left:50px;">
@@ -106,9 +108,12 @@
 
         <div class="form-row">
             <div class="form-group col-md-2" style="padding-left:20px;">
-                <button type="submit" (click)="genera()" class="btn btn-primary">Generar procedimiento.</button>
-                <br><br>
-                <button *ngIf="procediListo" type="submit" data-toggle="modal" data-target="#insertaModal" (click)="ejecutarInsert()" class="btn btn-primary">Ejecutar procedimiento Insertar.</button>
+                <button *ngIf="!procediListo" type="submit" (click)="genera()" class="btn btn-primary">Generar procedimiento.</button>
+                <br>
+                <button *ngIf="procediInsert" type="submit" data-toggle="modal" data-target="#ejecutaModal" (click)="ejecutarInsert()" class="btn btn-primary">Ejecutar procedimiento Insertar.</button>
+                <button *ngIf="procediSelect" type="submit" data-toggle="modal" data-target="#ejecutaModal" (click)="ejecutarSelect()" class="btn btn-primary">Ejecutar procedimiento Select.</button>
+                <button *ngIf="procediDelete" type="submit" data-toggle="modal" data-target="#ejecutaModal" (click)="ejecutarDelete()" class="btn btn-primary">Ejecutar procedimiento Delete.</button>
+                <button *ngIf="procediUpdate" type="submit" data-toggle="modal" data-target="#ejecutaModal" (click)="ejecutarUpdate()" class="btn btn-primary">Ejecutar procedimiento Update.</button>
             </div>
         </div>
 

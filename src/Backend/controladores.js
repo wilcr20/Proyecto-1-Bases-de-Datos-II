@@ -38,7 +38,7 @@ exports.obtenerEsquemas = function(rRequest, rResponse) {
     logica.obtenerEsquemas(rRequest, function(data) {
         rResponse.send(data);
         rResponse.end();
-        console.log("DATA RESUELTA de obtenerEsquemas: ", data);
+        //      console.log("DATA RESUELTA de obtenerEsquemas: ", data);
 
     });
 };
@@ -64,7 +64,7 @@ exports.hacerProcedimiento = function(rRequest, rResponse) {
     logica.hacerProcedimiento(rRequest, function(data) {
         rResponse.send(data);
         rResponse.end();
-        console.log("DATA RESUELTA de hacerProc: ", data);
+        //    console.log("DATA RESUELTA de hacerProc: ", data);
 
     });
 };
@@ -82,7 +82,16 @@ exports.obtenerParametros = function(rRequest, rResponse) {
     logica.obtenerParametros(rRequest, function(data) {
         rResponse.send(data);
         rResponse.end();
-        console.log("DATA RESUELTA de obtenerParametros: ", data);
+        // console.log("DATA RESUELTA de obtenerParametros: ", data);
+
+    });
+};
+
+exports.obtenerPrimaryKey = function(rRequest, rResponse) {
+    logica.obtenerPrimaryKey(rRequest, function(data) {
+        rResponse.send(data);
+        rResponse.end();
+        console.log("DATA RESUELTA de obtenerPrimaryKey: ", data);
 
     });
 };

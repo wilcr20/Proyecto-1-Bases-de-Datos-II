@@ -27,6 +27,7 @@ app.put('/obtenerEsquemaTabla', ctrl.obtenerEsquemaTabla);
 app.put('/hacerProcedimiento', ctrl.hacerProcedimiento);
 app.put('/ejecutarProcedimiento', ctrl.ejecutarProcedimiento);
 app.put('/obtenerParametros', ctrl.obtenerParametros);
+app.put('/obtenerPrimaryKey', ctrl.obtenerPrimaryKey);
 
 
 

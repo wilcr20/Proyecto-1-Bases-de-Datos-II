@@ -291,6 +291,7 @@ go
 execute autogeneracion.GA_Select_Personas2 207730941,null,null,null
 go
 
+
 execute autogeneracion.GA_Select_Personas2 null,'Marco2',null,null
 go
 
